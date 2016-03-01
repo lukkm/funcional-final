@@ -1,0 +1,64 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $StartApp$Simple = Elm.StartApp.Simple.make(_elm),
+   $Utils = Elm.Utils.make(_elm);
+   var _op = {};
+   var update = F2(function (action,model) {    return model;});
+   var getRandomBoard = A2($Utils.randomMatrix,4,4);
+   var getStringFromTile = function (t) {    return _U.eq(t,$Utils.Yellow) ? "Y" : _U.eq(t,$Utils.Blue) ? "B" : _U.eq(t,$Utils.Red) ? "R" : "G";};
+   var init = {board: getRandomBoard};
+   var Model = function (a) {    return {board: a};};
+   var tableBorder = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "border",_1: "1px solid gray"},{ctor: "_Tuple2",_0: "background-color",_1: "gray"}]));
+   var getViewBoard = F2(function (address,model) {
+      return A2($Html.table,
+      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}]))]),
+      _U.list([A2($Html.tr,
+              _U.list([tableBorder]),
+              _U.list([A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text(getStringFromTile(A2($Utils.getL,A2($Utils.getL,model.board,1),1)))]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text(getStringFromTile(A2($Utils.getL,A2($Utils.getL,model.board,1),2)))]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text(getStringFromTile(A2($Utils.getL,A2($Utils.getL,model.board,1),3)))]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text(getStringFromTile(A2($Utils.getL,A2($Utils.getL,model.board,1),4)))]))]))
+              ,A2($Html.tr,
+              _U.list([tableBorder]),
+              _U.list([A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))]))
+              ,A2($Html.tr,
+              _U.list([tableBorder]),
+              _U.list([A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))]))
+              ,A2($Html.tr,
+              _U.list([tableBorder]),
+              _U.list([A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))
+                      ,A2($Html.td,_U.list([tableBorder]),_U.list([$Html.text("a")]))]))]));
+   });
+   var view = F2(function (address,model) {    return A2(getViewBoard,address,model);});
+   var main = $StartApp$Simple.start({model: init,view: view,update: update});
+   return _elm.Main.values = {_op: _op
+                             ,tableBorder: tableBorder
+                             ,Model: Model
+                             ,init: init
+                             ,getStringFromTile: getStringFromTile
+                             ,getRandomBoard: getRandomBoard
+                             ,view: view
+                             ,update: update
+                             ,getViewBoard: getViewBoard
+                             ,main: main};
+};
