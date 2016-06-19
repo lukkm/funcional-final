@@ -95,7 +95,7 @@ updateBoard : Matrix -> Int -> Int -> Tile -> Tile -> Matrix
 updateBoard board x y originalColor nextColor = 
     if (x < 1 || y < 1 || x > (sizeOf board) || y > (sizeOf board) || (getM board x y) /= originalColor)
         then
-            fst (board, log "Holis" (x, y))
+            board
         else
             updateBoard (updateBoard (updateBoard (updateBoard (putM board x y nextColor) x (y-1) originalColor nextColor) (x-1) y originalColor nextColor) x (y+1) originalColor nextColor) (x+1) y originalColor nextColor
 

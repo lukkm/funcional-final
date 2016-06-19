@@ -18,11 +18,7 @@ Elm.Main.make = function (_elm) {
    var _op = {};
    var updateBoard = F5(function (board,x,y,originalColor,nextColor) {
       updateBoard: while (true) if (_U.cmp(x,1) < 0 || (_U.cmp(y,1) < 0 || (_U.cmp(x,$Utils.sizeOf(board)) > 0 || (_U.cmp(y,
-      $Utils.sizeOf(board)) > 0 || !_U.eq(A3($Utils.getM,board,x,y),originalColor))))) return $Basics.fst({ctor: "_Tuple2"
-                                                                                                          ,_0: board
-                                                                                                          ,_1: A2($Debug.log,
-                                                                                                          "Holis",
-                                                                                                          {ctor: "_Tuple2",_0: x,_1: y})}); else {
+      $Utils.sizeOf(board)) > 0 || !_U.eq(A3($Utils.getM,board,x,y),originalColor))))) return board; else {
             var _v0 = A5(updateBoard,
             A5(updateBoard,A5(updateBoard,A4($Utils.putM,board,x,y,nextColor),x,y - 1,originalColor,nextColor),x - 1,y,originalColor,nextColor),
             x,
