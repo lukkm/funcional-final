@@ -8,25 +8,45 @@ Elm.Utils.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Random = Elm.Random.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var sizeOf = function (l) {    return A3($List.foldr,F2(function (x,c) {    return c + 1;}),0,l);};
+   var putL = F3(function (l,a,n) {
+      var _p0 = l;
+      if (_p0.ctor === "[]") {
+            return _U.list([]);
+         } else {
+            var _p1 = _p0._1;
+            return _U.eq(n,1) ? A2($List._op["::"],a,_p1) : A2($List._op["::"],_p0._0,A3(putL,_p1,a,n - 1));
+         }
+   });
    var bottom = bottom;
    var getL = F2(function (l,n) {
       getL: while (true) {
-         var _p0 = l;
-         if (_p0.ctor === "[]") {
+         var _p2 = l;
+         if (_p2.ctor === "[]") {
                return bottom;
             } else {
-               if (_U.eq(n,1)) return _p0._0; else {
-                     var _v1 = _p0._1,_v2 = n - 1;
-                     l = _v1;
-                     n = _v2;
+               if (_U.eq(n,1)) return _p2._0; else {
+                     var _v2 = _p2._1,_v3 = n - 1;
+                     l = _v2;
+                     n = _v3;
                      continue getL;
                   }
             }
       }
+   });
+   var getM = F3(function (m,r,c) {    return A2(getL,A2(getL,m,r),c);});
+   var putM = F4(function (m,r,c,elem) {
+      var _p3 = m;
+      if (_p3.ctor === "[]") {
+            return bottom;
+         } else {
+            var _p5 = _p3._1;
+            var _p4 = _p3._0;
+            return _U.eq(r,1) ? A2($List._op["::"],A3(putL,_p4,elem,c),_p5) : A2($List._op["::"],_p4,A4(putM,_p5,r - 1,c,elem));
+         }
    });
    var Green = {ctor: "Green"};
    var Red = {ctor: "Red"};
@@ -34,9 +54,10 @@ Elm.Utils.make = function (_elm) {
    var Yellow = {ctor: "Yellow"};
    var getTileFromNumber = function (x) {    return _U.eq(x,0) ? Yellow : _U.eq(x,1) ? Blue : _U.eq(x,2) ? Red : Green;};
    var randomMatrix = F2(function (row,col) {
-      return A2($List.repeat,
-      row,
-      A2($List.repeat,col,$Basics.fst(A2($Random.generate,A2($Random.map,getTileFromNumber,A2($Random.$int,0,3)),$Random.initialSeed(12345)))));
+      return _U.list([_U.list([getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(3)])
+                     ,_U.list([getTileFromNumber(2),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(3)])
+                     ,_U.list([getTileFromNumber(0),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(0)])
+                     ,_U.list([getTileFromNumber(1),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2)])]);
    });
    return _elm.Utils.values = {_op: _op
                               ,Yellow: Yellow
@@ -46,5 +67,9 @@ Elm.Utils.make = function (_elm) {
                               ,bottom: bottom
                               ,getTileFromNumber: getTileFromNumber
                               ,randomMatrix: randomMatrix
-                              ,getL: getL};
+                              ,getL: getL
+                              ,putL: putL
+                              ,sizeOf: sizeOf
+                              ,getM: getM
+                              ,putM: putM};
 };
