@@ -7,7 +7,7 @@ import StartApp.Simple as StartApp
 import Utils exposing (..)
 import Styles exposing (..)
 import Debug exposing (..)
-import List exposing (indexedMap)
+import List exposing (foldr)
 
 {-
 
@@ -67,7 +67,8 @@ getViewBoard : Model -> Html
 getViewBoard model =
     div [centerMarginTop 40] [
         h1 [center] [text "FillZone"],
-        table [centerMarginTop 20] (indexedMap (\_ x -> tr [tableBorder] (indexedMap (\_ y -> td [getColorForTile (getM model.board x y)] [text ""]) [1..6])) [1..6])
+        table [centerMarginTop 20] (foldr (\x c -> [tr [tableBorder] (
+            foldr (\y d -> [td [getColorForTile (getM model.board x y)] [text ""]] ++ d) [] [1..6])] ++ c) [] [1..6])
     ] 
 
 getButtons : Signal.Address Action -> Html
