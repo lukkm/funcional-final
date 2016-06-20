@@ -89,59 +89,20 @@ Elm.Main.make = function (_elm) {
       _U.list([A2($Html.h1,_U.list([$Styles.center]),_U.list([$Html.text("FillZone")]))
               ,A2($Html.table,
               _U.list([$Styles.centerMarginTop(20)]),
-              _U.list([A2($Html.tr,
-                      _U.list([$Styles.tableBorder]),
-                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,1))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,2))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,3))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,4))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,5))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,6))]),_U.list([$Html.text("")]))]))
-                      ,A2($Html.tr,
-                      _U.list([$Styles.tableBorder]),
-                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,1))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,2))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,3))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,4))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,5))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,6))]),_U.list([$Html.text("")]))]))
-                      ,A2($Html.tr,
-                      _U.list([$Styles.tableBorder]),
-                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,1))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,2))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,3))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,4))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,5))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,6))]),_U.list([$Html.text("")]))]))
-                      ,A2($Html.tr,
-                      _U.list([$Styles.tableBorder]),
-                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,1))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,2))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,3))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,4))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,5))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,6))]),_U.list([$Html.text("")]))]))
-                      ,A2($Html.tr,
-                      _U.list([$Styles.tableBorder]),
-                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,1))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,2))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,3))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,4))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,5))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,6))]),_U.list([$Html.text("")]))]))
-                      ,A2($Html.tr,
-                      _U.list([$Styles.tableBorder]),
-                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,1))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,2))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,3))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,4))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,5))]),_U.list([$Html.text("")]))
-                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,6))]),_U.list([$Html.text("")]))]))]))]));
+              A2($List.indexedMap,
+              F2(function (_p1,x) {
+                 return A2($Html.tr,
+                 _U.list([$Styles.tableBorder]),
+                 A2($List.indexedMap,
+                 F2(function (_p2,y) {    return A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,x,y))]),_U.list([$Html.text("")]));}),
+                 _U.range(1,6)));
+              }),
+              _U.range(1,6)))]));
    };
    var getGameView = F2(function (address,model) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getViewBoard(model),getButtons(address)]));});
    var view = F2(function (address,model) {
-      var _p1 = model.status;
-      switch (_p1.ctor)
+      var _p3 = model.status;
+      switch (_p3.ctor)
       {case "Starting": return getStartingView(address);
          case "InGame": return A2(getGameView,address,model);
          default: return getWonView(address);}

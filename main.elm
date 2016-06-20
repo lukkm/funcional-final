@@ -7,6 +7,7 @@ import StartApp.Simple as StartApp
 import Utils exposing (..)
 import Styles exposing (..)
 import Debug exposing (..)
+import List exposing (indexedMap)
 
 {-
 
@@ -66,49 +67,7 @@ getViewBoard : Model -> Html
 getViewBoard model =
     div [centerMarginTop 40] [
         h1 [center] [text "FillZone"],
-        table [centerMarginTop 20] [
-        tr [tableBorder] [
-            td [getColorForTile (getM model.board 1 1)] [text ""],
-            td [getColorForTile (getM model.board 1 2)] [text ""],
-            td [getColorForTile (getM model.board 1 3)] [text ""],
-            td [getColorForTile (getM model.board 1 4)] [text ""],
-            td [getColorForTile (getM model.board 1 5)] [text ""],
-            td [getColorForTile (getM model.board 1 6)] [text ""]],
-        tr [tableBorder] [
-            td [getColorForTile (getM model.board 2 1)] [text ""],
-            td [getColorForTile (getM model.board 2 2)] [text ""],
-            td [getColorForTile (getM model.board 2 3)] [text ""],
-            td [getColorForTile (getM model.board 2 4)] [text ""],
-            td [getColorForTile (getM model.board 2 5)] [text ""],
-            td [getColorForTile (getM model.board 2 6)] [text ""]],
-        tr [tableBorder] [
-            td [getColorForTile (getM model.board 3 1)] [text ""],
-            td [getColorForTile (getM model.board 3 2)] [text ""],
-            td [getColorForTile (getM model.board 3 3)] [text ""],
-            td [getColorForTile (getM model.board 3 4)] [text ""],
-            td [getColorForTile (getM model.board 3 5)] [text ""],
-            td [getColorForTile (getM model.board 3 6)] [text ""]],
-        tr [tableBorder] [
-            td [getColorForTile (getM model.board 4 1)] [text ""],
-            td [getColorForTile (getM model.board 4 2)] [text ""],
-            td [getColorForTile (getM model.board 4 3)] [text ""],
-            td [getColorForTile (getM model.board 4 4)] [text ""],
-            td [getColorForTile (getM model.board 4 5)] [text ""],
-            td [getColorForTile (getM model.board 4 6)] [text ""]],
-        tr [tableBorder] [
-            td [getColorForTile (getM model.board 5 1)] [text ""],
-            td [getColorForTile (getM model.board 5 2)] [text ""],
-            td [getColorForTile (getM model.board 5 3)] [text ""],
-            td [getColorForTile (getM model.board 5 4)] [text ""],
-            td [getColorForTile (getM model.board 5 5)] [text ""],
-            td [getColorForTile (getM model.board 5 6)] [text ""]],
-        tr [tableBorder] [
-            td [getColorForTile (getM model.board 6 1)] [text ""],
-            td [getColorForTile (getM model.board 6 2)] [text ""],
-            td [getColorForTile (getM model.board 6 3)] [text ""],
-            td [getColorForTile (getM model.board 6 4)] [text ""],
-            td [getColorForTile (getM model.board 6 5)] [text ""],
-            td [getColorForTile (getM model.board 6 6)] [text ""]]]
+        table [centerMarginTop 20] (indexedMap (\_ x -> tr [tableBorder] (indexedMap (\_ y -> td [getColorForTile (getM model.board x y)] [text ""]) [1..6])) [1..6])
     ] 
 
 getButtons : Signal.Address Action -> Html
