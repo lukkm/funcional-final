@@ -10,6 +10,14 @@ center = style
                 ("text-align","center")
                 ]
 
+centerMarginTop : Int -> Attribute
+centerMarginTop margin = style 
+                [
+                ("margin","0 auto"),
+                ("text-align","center"),
+                ("margin-top", toString margin ++ "px")
+                ]
+
 buttonsContainer : Attribute
 buttonsContainer = style 
                         [

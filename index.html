@@ -11089,9 +11089,15 @@ Elm.Styles.make = function (_elm) {
    var buttonsContainer = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}
                                                          ,{ctor: "_Tuple2",_0: "width",_1: "100px"}
                                                          ,{ctor: "_Tuple2",_0: "margin-top",_1: "40px"}]));
+   var centerMarginTop = function (margin) {
+      return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}
+                                            ,{ctor: "_Tuple2",_0: "text-align",_1: "center"}
+                                            ,{ctor: "_Tuple2",_0: "margin-top",_1: A2($Basics._op["++"],$Basics.toString(margin),"px")}]));
+   };
    var center = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"},{ctor: "_Tuple2",_0: "text-align",_1: "center"}]));
    return _elm.Styles.values = {_op: _op
                                ,center: center
+                               ,centerMarginTop: centerMarginTop
                                ,buttonsContainer: buttonsContainer
                                ,marginTop: marginTop
                                ,marginLeft: marginLeft
@@ -11191,56 +11197,59 @@ Elm.Main.make = function (_elm) {
       return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : $Styles.greenTile;
    };
    var getViewBoard = function (model) {
-      return A2($Html.table,
-      _U.list([$Styles.center]),
-      _U.list([A2($Html.tr,
-              _U.list([$Styles.tableBorder]),
-              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,1))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,2))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,4))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,5))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,6))]),_U.list([$Html.text("")]))]))
-              ,A2($Html.tr,
-              _U.list([$Styles.tableBorder]),
-              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,1))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,2))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,4))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,5))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,6))]),_U.list([$Html.text("")]))]))
-              ,A2($Html.tr,
-              _U.list([$Styles.tableBorder]),
-              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,1))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,2))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,4))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,5))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,6))]),_U.list([$Html.text("")]))]))
-              ,A2($Html.tr,
-              _U.list([$Styles.tableBorder]),
-              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,1))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,2))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,4))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,5))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,6))]),_U.list([$Html.text("")]))]))
-              ,A2($Html.tr,
-              _U.list([$Styles.tableBorder]),
-              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,1))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,2))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,4))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,5))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,6))]),_U.list([$Html.text("")]))]))
-              ,A2($Html.tr,
-              _U.list([$Styles.tableBorder]),
-              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,1))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,2))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,4))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,5))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,6))]),_U.list([$Html.text("")]))]))]));
+      return A2($Html.div,
+      _U.list([$Styles.centerMarginTop(40)]),
+      _U.list([A2($Html.h1,_U.list([$Styles.center]),_U.list([$Html.text("FillZone")]))
+              ,A2($Html.table,
+              _U.list([$Styles.centerMarginTop(20)]),
+              _U.list([A2($Html.tr,
+                      _U.list([$Styles.tableBorder]),
+                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,1))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,2))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,3))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,4))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,5))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,6))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.tr,
+                      _U.list([$Styles.tableBorder]),
+                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,1))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,2))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,3))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,4))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,5))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,6))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.tr,
+                      _U.list([$Styles.tableBorder]),
+                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,1))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,2))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,3))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,4))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,5))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,6))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.tr,
+                      _U.list([$Styles.tableBorder]),
+                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,1))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,2))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,3))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,4))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,5))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,6))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.tr,
+                      _U.list([$Styles.tableBorder]),
+                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,1))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,2))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,3))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,4))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,5))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,6))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.tr,
+                      _U.list([$Styles.tableBorder]),
+                      _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,1))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,2))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,3))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,4))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,5))]),_U.list([$Html.text("")]))
+                              ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,6))]),_U.list([$Html.text("")]))]))]))]));
    };
    var getGameView = F2(function (address,model) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getViewBoard(model),getButtons(address)]));});
    var view = F2(function (address,model) {
