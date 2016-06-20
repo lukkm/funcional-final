@@ -12,6 +12,7 @@ Utils - This class contains utility functions
 -}
 
 type Tile = Yellow | Blue | Red | Green
+type Status = Starting | InGame | Won
 
 type alias Matrix = List (List Tile)
 

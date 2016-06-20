@@ -7,6 +7,7 @@ Elm.Main.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -16,6 +17,12 @@ Elm.Main.make = function (_elm) {
    $Styles = Elm.Styles.make(_elm),
    $Utils = Elm.Utils.make(_elm);
    var _op = {};
+   var getBoardStatusRec = F4(function (board,color,x,y) {
+      return _U.cmp(x,$Utils.sizeOf(board)) > 0 || _U.cmp(y,$Utils.sizeOf(board)) > 0 ? $Utils.Won : !_U.eq(A3($Utils.getM,board,x,y),
+      color) ? $Utils.InGame : _U.eq(A4(getBoardStatusRec,board,color,x + 1,y),$Utils.Won) && _U.eq(A4(getBoardStatusRec,board,color,x,y + 1),
+      $Utils.Won) ? $Utils.Won : $Utils.InGame;
+   });
+   var getBoardStatus = function (board) {    return A4(getBoardStatusRec,board,A3($Utils.getM,board,1,1),1,1);};
    var updateBoard = F5(function (board,x,y,originalColor,nextColor) {
       updateBoard: while (true) if (_U.cmp(x,1) < 0 || (_U.cmp(y,1) < 0 || (_U.cmp(x,$Utils.sizeOf(board)) > 0 || (_U.cmp(y,
       $Utils.sizeOf(board)) > 0 || !_U.eq(A3($Utils.getM,board,x,y),originalColor))))) return board; else {
@@ -37,9 +44,30 @@ Elm.Main.make = function (_elm) {
             continue updateBoard;
          }
    });
-   var changeColor = F2(function (model,tile) {    return {board: A5(updateBoard,model.board,1,1,A2($Utils.getL,A2($Utils.getL,model.board,1),1),tile)};});
-   var update = F2(function (action,model) {    var _p0 = action;return A2(changeColor,model,_p0._0);});
+   var changeColor = F2(function (model,tile) {
+      var updatedBoard = A5(updateBoard,model.board,1,1,A2($Utils.getL,A2($Utils.getL,model.board,1),1),tile);
+      return _U.update(model,{board: updatedBoard,status: getBoardStatus(updatedBoard)});
+   });
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      if (_p0.ctor === "ChangeColor") {
+            return A2(changeColor,model,_p0._0);
+         } else {
+            return _U.update(model,{board: model.board,status: $Utils.InGame});
+         }
+   });
+   var Start = {ctor: "Start"};
    var ChangeColor = function (a) {    return {ctor: "ChangeColor",_0: a};};
+   var getPlayButton = function (address) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"},{ctor: "_Tuple2",_0: "width",_1: "250px"}]))]),
+      _U.list([A2($Html.img,
+      _U.list([$Html$Attributes.src("img/playbutton.jpeg")
+              ,$Html$Attributes.width(250)
+              ,A2($Html$Events.onClick,address,Start)
+              ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin-top",_1: "20px"}]))]),
+      _U.list([]))]));
+   };
    var getButtons = function (address) {
       return A2($Html.div,
       _U.list([$Styles.center,$Styles.marginTop(40)]),
@@ -48,6 +76,8 @@ Elm.Main.make = function (_elm) {
               ,A2($Html.div,_U.list([$Styles.inline,$Styles.redTile,A2($Html$Events.onClick,address,ChangeColor($Utils.Red))]),_U.list([]))
               ,A2($Html.div,_U.list([$Styles.inline,$Styles.greenTile,A2($Html$Events.onClick,address,ChangeColor($Utils.Green))]),_U.list([]))]));
    };
+   var getWonView = A2($Html.div,_U.list([$Styles.center]),_U.list([$Html.text("You win")]));
+   var getStartingView = function (address) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getPlayButton(address)]));};
    var getRandomBoard = A2($Utils.randomMatrix,4,4);
    var getColorForTile = function (t) {
       return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : $Styles.greenTile;
@@ -81,10 +111,16 @@ Elm.Main.make = function (_elm) {
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,4))]),_U.list([$Html.text("")]))]))]));
    };
    var getGameView = F2(function (address,model) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getViewBoard(model),getButtons(address)]));});
-   var view = F2(function (address,model) {    return A2(getGameView,address,model);});
-   var init = {board: getRandomBoard};
+   var view = F2(function (address,model) {
+      var _p1 = model.status;
+      switch (_p1.ctor)
+      {case "Starting": return getStartingView(address);
+         case "InGame": return A2(getGameView,address,model);
+         default: return getWonView;}
+   });
+   var init = {board: getRandomBoard,status: $Utils.Starting};
    var main = $StartApp$Simple.start({model: init,view: view,update: update});
-   var Model = function (a) {    return {board: a};};
+   var Model = F2(function (a,b) {    return {board: a,status: b};});
    return _elm.Main.values = {_op: _op
                              ,Model: Model
                              ,init: init
@@ -92,11 +128,17 @@ Elm.Main.make = function (_elm) {
                              ,getRandomBoard: getRandomBoard
                              ,view: view
                              ,getGameView: getGameView
+                             ,getStartingView: getStartingView
+                             ,getWonView: getWonView
                              ,getViewBoard: getViewBoard
                              ,getButtons: getButtons
+                             ,getPlayButton: getPlayButton
                              ,ChangeColor: ChangeColor
+                             ,Start: Start
                              ,update: update
                              ,changeColor: changeColor
                              ,updateBoard: updateBoard
+                             ,getBoardStatus: getBoardStatus
+                             ,getBoardStatusRec: getBoardStatusRec
                              ,main: main};
 };

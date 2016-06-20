@@ -1,5 +1,6 @@
 import Html exposing (..)
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (style,type',checked,src)
 import StartApp.Simple as StartApp
 
 --Files .elm
@@ -15,11 +16,12 @@ Model - Game logic.
 
 type alias Model = 
     {
-    board : Matrix
+    board : Matrix,
+    status : Status
     }
 
 init : Model
-init = { board = getRandomBoard }
+init = { board = getRandomBoard, status = Starting }
 
 getColorForTile : Tile -> Attribute
 getColorForTile t = 
@@ -28,11 +30,15 @@ getColorForTile t =
  else if t == Red then redTile
  else greenTile
 
---For the board, each List of the Matrix is one pilar of the board.
+--Generate a random board
 getRandomBoard : Matrix
 getRandomBoard = randomMatrix 4 4
 
-view address model = getGameView address model
+view address model = 
+    case model.status of
+        Starting -> getStartingView address
+        InGame -> getGameView address model
+        Won -> getWonView
 
 getGameView : Signal.Address Action -> Model -> Html
 getGameView address model = 
@@ -40,6 +46,16 @@ getGameView address model =
         getViewBoard model,
         getButtons address
     ]
+
+getStartingView : Signal.Address Action -> Html
+getStartingView address = 
+    div [center] 
+        [   
+            getPlayButton address
+        ]
+
+getWonView : Html
+getWonView = div[center] [text "You win"]
 
 getViewBoard : Model -> Html
 getViewBoard model = 
@@ -74,22 +90,37 @@ getButtons address =
         div [inline,greenTile,onClick address (ChangeColor Green)] []
     ]
 
+getPlayButton : Signal.Address Action -> Html
+getPlayButton address =
+    div [style [("margin", "0 auto"),("width","250px")]] 
+    [
+        img [src "img/playbutton.jpeg",Html.Attributes.width 250,onClick address Start,style [("margin-top","20px")]] []
+    ]
+
 {-
 Update - Represents all interactions (actions) with the model .
 --------------------------------------------------------------
 -}
-type Action = ChangeColor Tile
+type Action = ChangeColor Tile | Start
 
 update : Action -> Model -> Model
 update action model = 
     case action of
         ChangeColor tile -> changeColor model tile
+        Start -> {
+                    model | board = model.board,
+                            status = InGame
+                }
 
 changeColor : Model -> Tile -> Model
-changeColor model tile = 
-    {
-        board = updateBoard model.board 1 1 (getL (getL model.board 1) 1) tile
-    }
+changeColor model tile =
+    let 
+        updatedBoard = updateBoard model.board 1 1 (getL (getL model.board 1) 1) tile
+    in
+        {
+            model | board = updatedBoard,
+                    status = getBoardStatus updatedBoard
+        }
 
 updateBoard : Matrix -> Int -> Int -> Tile -> Tile -> Matrix 
 updateBoard board x y originalColor nextColor = 
@@ -98,5 +129,24 @@ updateBoard board x y originalColor nextColor =
             board
         else
             updateBoard (updateBoard (updateBoard (updateBoard (putM board x y nextColor) x (y-1) originalColor nextColor) (x-1) y originalColor nextColor) x (y+1) originalColor nextColor) (x+1) y originalColor nextColor
+
+getBoardStatus : Matrix -> Status
+getBoardStatus board = getBoardStatusRec board (getM board 1 1) 1 1
+
+getBoardStatusRec : Matrix -> Tile -> Int -> Int -> Status
+getBoardStatusRec board color x y = 
+    if (x > (sizeOf board) || y > (sizeOf board))
+        then
+            Won
+        else
+            if (getM board x y /= color)
+                then
+                    InGame
+                else
+                    if (getBoardStatusRec board color (x+1) y == Won && getBoardStatusRec board color x (y+1) == Won)
+                        then
+                            Won
+                        else
+                            InGame
 
 main = StartApp.start { model = init, view = view, update = update }
