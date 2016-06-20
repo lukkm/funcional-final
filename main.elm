@@ -32,13 +32,13 @@ getColorForTile t =
 
 --Generate a random board
 getRandomBoard : Matrix
-getRandomBoard = randomMatrix 4 4
+getRandomBoard = randomMatrix 6 6
 
 view address model = 
     case model.status of
         Starting -> getStartingView address
         InGame -> getGameView address model
-        Won -> getWonView
+        Won -> getWonView address
 
 getGameView : Signal.Address Action -> Model -> Html
 getGameView address model = 
@@ -54,8 +54,13 @@ getStartingView address =
             getPlayButton address
         ]
 
-getWonView : Html
-getWonView = div[center] [text "You win"]
+getWonView : Signal.Address Action -> Html
+getWonView address = 
+    div[center] 
+       [
+            getWonText,
+            getPlayButton address
+       ]
 
 getViewBoard : Model -> Html
 getViewBoard model = 
@@ -64,30 +69,52 @@ getViewBoard model =
         td [getColorForTile (getM model.board 1 1)] [text ""],
         td [getColorForTile (getM model.board 1 2)] [text ""],
         td [getColorForTile (getM model.board 1 3)] [text ""],
-        td [getColorForTile (getM model.board 1 4)] [text ""]],
+        td [getColorForTile (getM model.board 1 4)] [text ""],
+        td [getColorForTile (getM model.board 1 5)] [text ""],
+        td [getColorForTile (getM model.board 1 6)] [text ""]],
     tr [tableBorder] [
         td [getColorForTile (getM model.board 2 1)] [text ""],
         td [getColorForTile (getM model.board 2 2)] [text ""],
         td [getColorForTile (getM model.board 2 3)] [text ""],
-        td [getColorForTile (getM model.board 2 4)] [text ""]],
+        td [getColorForTile (getM model.board 2 4)] [text ""],
+        td [getColorForTile (getM model.board 2 5)] [text ""],
+        td [getColorForTile (getM model.board 2 6)] [text ""]],
     tr [tableBorder] [
         td [getColorForTile (getM model.board 3 1)] [text ""],
         td [getColorForTile (getM model.board 3 2)] [text ""],
         td [getColorForTile (getM model.board 3 3)] [text ""],
-        td [getColorForTile (getM model.board 3 4)] [text ""]],
+        td [getColorForTile (getM model.board 3 4)] [text ""],
+        td [getColorForTile (getM model.board 3 5)] [text ""],
+        td [getColorForTile (getM model.board 3 6)] [text ""]],
     tr [tableBorder] [
         td [getColorForTile (getM model.board 4 1)] [text ""],
         td [getColorForTile (getM model.board 4 2)] [text ""],
         td [getColorForTile (getM model.board 4 3)] [text ""],
-        td [getColorForTile (getM model.board 4 4)] [text ""]]]
+        td [getColorForTile (getM model.board 4 4)] [text ""],
+        td [getColorForTile (getM model.board 4 5)] [text ""],
+        td [getColorForTile (getM model.board 4 6)] [text ""]],
+    tr [tableBorder] [
+        td [getColorForTile (getM model.board 5 1)] [text ""],
+        td [getColorForTile (getM model.board 5 2)] [text ""],
+        td [getColorForTile (getM model.board 5 3)] [text ""],
+        td [getColorForTile (getM model.board 5 4)] [text ""],
+        td [getColorForTile (getM model.board 5 5)] [text ""],
+        td [getColorForTile (getM model.board 5 6)] [text ""]],
+    tr [tableBorder] [
+        td [getColorForTile (getM model.board 6 1)] [text ""],
+        td [getColorForTile (getM model.board 6 2)] [text ""],
+        td [getColorForTile (getM model.board 6 3)] [text ""],
+        td [getColorForTile (getM model.board 6 4)] [text ""],
+        td [getColorForTile (getM model.board 6 5)] [text ""],
+        td [getColorForTile (getM model.board 6 6)] [text ""]]]
 
 getButtons : Signal.Address Action -> Html
 getButtons address = 
-    div [center, marginTop 40] [
-        div [inline,yellowTile,onClick address (ChangeColor Yellow)] [],
-        div [inline,blueTile,onClick address (ChangeColor Blue)] [],
-        div [inline,redTile,onClick address (ChangeColor Red)] [],
-        div [inline,greenTile,onClick address (ChangeColor Green)] []
+    div [buttonsContainer] [
+        div [yellowTileInline,onClick address (ChangeColor Yellow)] [],
+        div [blueTileInline,onClick address (ChangeColor Blue)] [],
+        div [redTileInline,onClick address (ChangeColor Red)] [],
+        div [greenTileInline,onClick address (ChangeColor Green)] []
     ]
 
 getPlayButton : Signal.Address Action -> Html
@@ -96,6 +123,9 @@ getPlayButton address =
     [
         img [src "img/playbutton.jpeg",Html.Attributes.width 250,onClick address Start,style [("margin-top","20px")]] []
     ]
+
+getWonText : Html
+getWonText = h1 [center] [text "You win"]
 
 {-
 Update - Represents all interactions (actions) with the model .
@@ -108,7 +138,7 @@ update action model =
     case action of
         ChangeColor tile -> changeColor model tile
         Start -> {
-                    model | board = model.board,
+                    model | board = getRandomBoard,
                             status = InGame
                 }
 
@@ -124,7 +154,7 @@ changeColor model tile =
 
 updateBoard : Matrix -> Int -> Int -> Tile -> Tile -> Matrix 
 updateBoard board x y originalColor nextColor = 
-    if (x < 1 || y < 1 || x > (sizeOf board) || y > (sizeOf board) || (getM board x y) /= originalColor)
+    if (x < 1 || y < 1 || x > (sizeOf board) || y > (sizeOf board) || (getM board x y) /= originalColor || originalColor == nextColor)
         then
             board
         else

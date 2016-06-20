@@ -32,7 +32,7 @@ startTimeSeed = Random.initialSeed <| round Time.timestamp
 
 randomMatrix : Int -> Int -> Matrix
 {- randomMatrix row col = List.repeat row (List.repeat col (fst (Random.generate (Random.map getTileFromNumber (Random.int 0 3))))) -}
-randomMatrix row col = [[getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 3],[getTileFromNumber 2, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 3],[getTileFromNumber 0, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 0],[getTileFromNumber 1, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2]]
+randomMatrix row col = [[getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 1, getTileFromNumber 2],[getTileFromNumber 2, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1],[getTileFromNumber 0, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 3],[getTileFromNumber 1, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 1],[getTileFromNumber 2, getTileFromNumber 0, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 0],[getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 2]]
 
 getL : List a -> Int -> a
 getL l n = 

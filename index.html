@@ -10995,10 +10995,17 @@ Elm.Utils.make = function (_elm) {
    var Yellow = {ctor: "Yellow"};
    var getTileFromNumber = function (x) {    return _U.eq(x,0) ? Yellow : _U.eq(x,1) ? Blue : _U.eq(x,2) ? Red : Green;};
    var randomMatrix = F2(function (row,col) {
-      return _U.list([_U.list([getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(3)])
-                     ,_U.list([getTileFromNumber(2),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(3)])
-                     ,_U.list([getTileFromNumber(0),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(0)])
-                     ,_U.list([getTileFromNumber(1),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2)])]);
+      return _U.list([_U.list([getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(1),getTileFromNumber(2)])
+                     ,_U.list([getTileFromNumber(2),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2),getTileFromNumber(1)])
+                     ,_U.list([getTileFromNumber(0),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(3)])
+                     ,_U.list([getTileFromNumber(1),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(1)])
+                     ,_U.list([getTileFromNumber(2),getTileFromNumber(0),getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(0)])
+                     ,_U.list([getTileFromNumber(3)
+                              ,getTileFromNumber(2)
+                              ,getTileFromNumber(3)
+                              ,getTileFromNumber(3)
+                              ,getTileFromNumber(0)
+                              ,getTileFromNumber(2)])]);
    });
    return _elm.Utils.values = {_op: _op
                               ,Yellow: Yellow
@@ -11031,6 +11038,30 @@ Elm.Styles.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var blueTileInline = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "border",_1: "1px solid gray"}
+                                                       ,{ctor: "_Tuple2",_0: "background-color",_1: "blue"}
+                                                       ,{ctor: "_Tuple2",_0: "margin-left",_1: "3px"}
+                                                       ,{ctor: "_Tuple2",_0: "width",_1: "20px"}
+                                                       ,{ctor: "_Tuple2",_0: "height",_1: "20px"}
+                                                       ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]));
+   var greenTileInline = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "border",_1: "1px solid gray"}
+                                                        ,{ctor: "_Tuple2",_0: "background-color",_1: "green"}
+                                                        ,{ctor: "_Tuple2",_0: "margin-left",_1: "3px"}
+                                                        ,{ctor: "_Tuple2",_0: "width",_1: "20px"}
+                                                        ,{ctor: "_Tuple2",_0: "height",_1: "20px"}
+                                                        ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]));
+   var yellowTileInline = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "border",_1: "1px solid gray"}
+                                                         ,{ctor: "_Tuple2",_0: "background-color",_1: "yellow"}
+                                                         ,{ctor: "_Tuple2",_0: "margin-left",_1: "3px"}
+                                                         ,{ctor: "_Tuple2",_0: "width",_1: "20px"}
+                                                         ,{ctor: "_Tuple2",_0: "height",_1: "20px"}
+                                                         ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]));
+   var redTileInline = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "border",_1: "1px solid gray"}
+                                                      ,{ctor: "_Tuple2",_0: "background-color",_1: "red"}
+                                                      ,{ctor: "_Tuple2",_0: "margin-left",_1: "3px"}
+                                                      ,{ctor: "_Tuple2",_0: "width",_1: "20px"}
+                                                      ,{ctor: "_Tuple2",_0: "height",_1: "20px"}
+                                                      ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]));
    var blueTile = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "border",_1: "1px solid gray"}
                                                  ,{ctor: "_Tuple2",_0: "background-color",_1: "blue"}
                                                  ,{ctor: "_Tuple2",_0: "width",_1: "20px"}
@@ -11055,9 +11086,13 @@ Elm.Styles.make = function (_elm) {
    var marginTop = function (size) {
       return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin-top",_1: A2($Basics._op["++"],$Basics.toString(size),"px")}]));
    };
-   var center = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}]));
+   var buttonsContainer = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}
+                                                         ,{ctor: "_Tuple2",_0: "width",_1: "100px"}
+                                                         ,{ctor: "_Tuple2",_0: "margin-top",_1: "40px"}]));
+   var center = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"},{ctor: "_Tuple2",_0: "text-align",_1: "center"}]));
    return _elm.Styles.values = {_op: _op
                                ,center: center
+                               ,buttonsContainer: buttonsContainer
                                ,marginTop: marginTop
                                ,marginLeft: marginLeft
                                ,inline: inline
@@ -11065,7 +11100,11 @@ Elm.Styles.make = function (_elm) {
                                ,redTile: redTile
                                ,yellowTile: yellowTile
                                ,greenTile: greenTile
-                               ,blueTile: blueTile};
+                               ,blueTile: blueTile
+                               ,redTileInline: redTileInline
+                               ,yellowTileInline: yellowTileInline
+                               ,greenTileInline: greenTileInline
+                               ,blueTileInline: blueTileInline};
 };Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
    "use strict";
@@ -11093,7 +11132,7 @@ Elm.Main.make = function (_elm) {
    var getBoardStatus = function (board) {    return A4(getBoardStatusRec,board,A3($Utils.getM,board,1,1),1,1);};
    var updateBoard = F5(function (board,x,y,originalColor,nextColor) {
       updateBoard: while (true) if (_U.cmp(x,1) < 0 || (_U.cmp(y,1) < 0 || (_U.cmp(x,$Utils.sizeOf(board)) > 0 || (_U.cmp(y,
-      $Utils.sizeOf(board)) > 0 || !_U.eq(A3($Utils.getM,board,x,y),originalColor))))) return board; else {
+      $Utils.sizeOf(board)) > 0 || (!_U.eq(A3($Utils.getM,board,x,y),originalColor) || _U.eq(originalColor,nextColor)))))) return board; else {
             var _v0 = A5(updateBoard,
             A5(updateBoard,A5(updateBoard,A4($Utils.putM,board,x,y,nextColor),x,y - 1,originalColor,nextColor),x - 1,y,originalColor,nextColor),
             x,
@@ -11116,16 +11155,9 @@ Elm.Main.make = function (_elm) {
       var updatedBoard = A5(updateBoard,model.board,1,1,A2($Utils.getL,A2($Utils.getL,model.board,1),1),tile);
       return _U.update(model,{board: updatedBoard,status: getBoardStatus(updatedBoard)});
    });
-   var update = F2(function (action,model) {
-      var _p0 = action;
-      if (_p0.ctor === "ChangeColor") {
-            return A2(changeColor,model,_p0._0);
-         } else {
-            return _U.update(model,{board: model.board,status: $Utils.InGame});
-         }
-   });
    var Start = {ctor: "Start"};
    var ChangeColor = function (a) {    return {ctor: "ChangeColor",_0: a};};
+   var getWonText = A2($Html.h1,_U.list([$Styles.center]),_U.list([$Html.text("You win")]));
    var getPlayButton = function (address) {
       return A2($Html.div,
       _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"},{ctor: "_Tuple2",_0: "width",_1: "250px"}]))]),
@@ -11138,15 +11170,23 @@ Elm.Main.make = function (_elm) {
    };
    var getButtons = function (address) {
       return A2($Html.div,
-      _U.list([$Styles.center,$Styles.marginTop(40)]),
-      _U.list([A2($Html.div,_U.list([$Styles.inline,$Styles.yellowTile,A2($Html$Events.onClick,address,ChangeColor($Utils.Yellow))]),_U.list([]))
-              ,A2($Html.div,_U.list([$Styles.inline,$Styles.blueTile,A2($Html$Events.onClick,address,ChangeColor($Utils.Blue))]),_U.list([]))
-              ,A2($Html.div,_U.list([$Styles.inline,$Styles.redTile,A2($Html$Events.onClick,address,ChangeColor($Utils.Red))]),_U.list([]))
-              ,A2($Html.div,_U.list([$Styles.inline,$Styles.greenTile,A2($Html$Events.onClick,address,ChangeColor($Utils.Green))]),_U.list([]))]));
+      _U.list([$Styles.buttonsContainer]),
+      _U.list([A2($Html.div,_U.list([$Styles.yellowTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Yellow))]),_U.list([]))
+              ,A2($Html.div,_U.list([$Styles.blueTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Blue))]),_U.list([]))
+              ,A2($Html.div,_U.list([$Styles.redTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Red))]),_U.list([]))
+              ,A2($Html.div,_U.list([$Styles.greenTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Green))]),_U.list([]))]));
    };
-   var getWonView = A2($Html.div,_U.list([$Styles.center]),_U.list([$Html.text("You win")]));
+   var getWonView = function (address) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getWonText,getPlayButton(address)]));};
    var getStartingView = function (address) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getPlayButton(address)]));};
-   var getRandomBoard = A2($Utils.randomMatrix,4,4);
+   var getRandomBoard = A2($Utils.randomMatrix,6,6);
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      if (_p0.ctor === "ChangeColor") {
+            return A2(changeColor,model,_p0._0);
+         } else {
+            return _U.update(model,{board: getRandomBoard,status: $Utils.InGame});
+         }
+   });
    var getColorForTile = function (t) {
       return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : $Styles.greenTile;
    };
@@ -11158,25 +11198,49 @@ Elm.Main.make = function (_elm) {
               _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,1))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,2))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,4))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,4))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,5))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,1,6))]),_U.list([$Html.text("")]))]))
               ,A2($Html.tr,
               _U.list([$Styles.tableBorder]),
               _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,1))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,2))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,4))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,4))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,5))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,2,6))]),_U.list([$Html.text("")]))]))
               ,A2($Html.tr,
               _U.list([$Styles.tableBorder]),
               _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,1))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,2))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,4))]),_U.list([$Html.text("")]))]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,4))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,5))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,3,6))]),_U.list([$Html.text("")]))]))
               ,A2($Html.tr,
               _U.list([$Styles.tableBorder]),
               _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,1))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,2))]),_U.list([$Html.text("")]))
                       ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,3))]),_U.list([$Html.text("")]))
-                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,4))]),_U.list([$Html.text("")]))]))]));
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,4))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,5))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,4,6))]),_U.list([$Html.text("")]))]))
+              ,A2($Html.tr,
+              _U.list([$Styles.tableBorder]),
+              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,1))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,2))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,3))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,4))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,5))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,5,6))]),_U.list([$Html.text("")]))]))
+              ,A2($Html.tr,
+              _U.list([$Styles.tableBorder]),
+              _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,1))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,2))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,3))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,4))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,5))]),_U.list([$Html.text("")]))
+                      ,A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,model.board,6,6))]),_U.list([$Html.text("")]))]))]));
    };
    var getGameView = F2(function (address,model) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getViewBoard(model),getButtons(address)]));});
    var view = F2(function (address,model) {
@@ -11184,7 +11248,7 @@ Elm.Main.make = function (_elm) {
       switch (_p1.ctor)
       {case "Starting": return getStartingView(address);
          case "InGame": return A2(getGameView,address,model);
-         default: return getWonView;}
+         default: return getWonView(address);}
    });
    var init = {board: getRandomBoard,status: $Utils.Starting};
    var main = $StartApp$Simple.start({model: init,view: view,update: update});
@@ -11201,6 +11265,7 @@ Elm.Main.make = function (_elm) {
                              ,getViewBoard: getViewBoard
                              ,getButtons: getButtons
                              ,getPlayButton: getPlayButton
+                             ,getWonText: getWonText
                              ,ChangeColor: ChangeColor
                              ,Start: Start
                              ,update: update

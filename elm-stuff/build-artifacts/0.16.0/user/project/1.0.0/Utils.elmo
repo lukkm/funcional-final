@@ -57,10 +57,17 @@ Elm.Utils.make = function (_elm) {
    var Yellow = {ctor: "Yellow"};
    var getTileFromNumber = function (x) {    return _U.eq(x,0) ? Yellow : _U.eq(x,1) ? Blue : _U.eq(x,2) ? Red : Green;};
    var randomMatrix = F2(function (row,col) {
-      return _U.list([_U.list([getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(3)])
-                     ,_U.list([getTileFromNumber(2),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(3)])
-                     ,_U.list([getTileFromNumber(0),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(0)])
-                     ,_U.list([getTileFromNumber(1),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2)])]);
+      return _U.list([_U.list([getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(1),getTileFromNumber(2)])
+                     ,_U.list([getTileFromNumber(2),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2),getTileFromNumber(1)])
+                     ,_U.list([getTileFromNumber(0),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(3)])
+                     ,_U.list([getTileFromNumber(1),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(1)])
+                     ,_U.list([getTileFromNumber(2),getTileFromNumber(0),getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(0)])
+                     ,_U.list([getTileFromNumber(3)
+                              ,getTileFromNumber(2)
+                              ,getTileFromNumber(3)
+                              ,getTileFromNumber(3)
+                              ,getTileFromNumber(0)
+                              ,getTileFromNumber(2)])]);
    });
    return _elm.Utils.values = {_op: _op
                               ,Yellow: Yellow

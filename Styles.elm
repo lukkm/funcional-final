@@ -4,7 +4,19 @@ import Html.Attributes exposing (style,type',checked,src)
 import Html exposing (..)
 
 center : Attribute
-center = style [("margin","0 auto")]
+center = style 
+                [
+                ("margin","0 auto"),
+                ("text-align","center")
+                ]
+
+buttonsContainer : Attribute
+buttonsContainer = style 
+                        [
+                        ("margin","0 auto"),
+                        ("width","100px"),
+                        ("margin-top", "40px")
+                        ]
 
 marginTop : Int -> Attribute
 marginTop size = style [("margin-top", toString size ++ "px")]
@@ -61,4 +73,52 @@ blueTile =
         ("background-color","blue"),
         ("width", "20px"),
         ("height", "20px")
+        ]
+
+redTileInline : Attribute
+redTileInline =
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","red"),
+        ("margin-left","3px"),
+        ("width", "20px"),
+        ("height", "20px"),
+        ("display", "inline-block")
+        ]
+
+yellowTileInline : Attribute
+yellowTileInline =
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","yellow"),
+        ("margin-left","3px"),
+        ("width", "20px"),
+        ("height", "20px"),
+        ("display", "inline-block")
+        ]
+
+greenTileInline : Attribute
+greenTileInline =
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","green"),
+        ("margin-left","3px"),
+        ("width", "20px"),
+        ("height", "20px"),
+        ("display", "inline-block")
+        ]
+
+blueTileInline : Attribute
+blueTileInline = 
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","blue"),
+        ("margin-left","3px"),
+        ("width", "20px"),
+        ("height", "20px"),
+        ("display", "inline-block")
         ]
