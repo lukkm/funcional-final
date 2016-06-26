@@ -48,6 +48,7 @@ Elm.Utils.make = function (_elm) {
             return _U.eq(r,1) ? A2($List._op["::"],A3(putL,_p4,elem,c),_p5) : A2($List._op["::"],_p4,A4(putM,_p5,r - 1,c,elem));
          }
    });
+   var Lost = {ctor: "Lost"};
    var Won = {ctor: "Won"};
    var InGame = {ctor: "InGame"};
    var Starting = {ctor: "Starting"};
@@ -77,6 +78,7 @@ Elm.Utils.make = function (_elm) {
                               ,Starting: Starting
                               ,InGame: InGame
                               ,Won: Won
+                              ,Lost: Lost
                               ,bottom: bottom
                               ,getTileFromNumber: getTileFromNumber
                               ,randomMatrix: randomMatrix

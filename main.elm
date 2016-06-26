@@ -8,6 +8,7 @@ import Utils exposing (..)
 import Styles exposing (..)
 import Debug exposing (..)
 import List exposing (foldr)
+import String exposing (append)
 
 {-
 
@@ -18,11 +19,12 @@ Model - Game logic.
 type alias Model = 
     {
     board : Matrix,
-    status : Status
+    status : Status,
+    moves : Int
     }
 
 init : Model
-init = { board = getRandomBoard, status = Starting }
+init = { board = getRandomBoard, status = Starting, moves = 10 }
 
 getColorForTile : Tile -> Attribute
 getColorForTile t = 
@@ -39,13 +41,15 @@ view address model =
     case model.status of
         Starting -> getStartingView address
         InGame -> getGameView address model
-        Won -> getWonView address
+        Won -> getFinishedView "You win" address
+        Lost -> getFinishedView "You lose" address
 
 getGameView : Signal.Address Action -> Model -> Html
 getGameView address model = 
     div [center] [
         getViewBoard model,
-        getButtons address
+        getButtons address,
+        getRemainingMoves model
     ]
 
 getStartingView : Signal.Address Action -> Html
@@ -55,11 +59,11 @@ getStartingView address =
             getPlayButton address
         ]
 
-getWonView : Signal.Address Action -> Html
-getWonView address = 
+getFinishedView : String -> Signal.Address Action -> Html
+getFinishedView str address = 
     div[center] 
        [
-            getWonText,
+            getFinishedText str,
             getPlayButton address
        ]
 
@@ -80,6 +84,10 @@ getButtons address =
         div [greenTileInline,onClick address (ChangeColor Green)] []
     ]
 
+getRemainingMoves : Model -> Html
+getRemainingMoves model = 
+    div [movesContainer] [text (append "Remaining moves: " (toString model.moves))]
+
 getPlayButton : Signal.Address Action -> Html
 getPlayButton address =
     div [style [("margin", "0 auto"),("width","250px")]] 
@@ -87,8 +95,8 @@ getPlayButton address =
         img [src "img/playbutton.jpeg",Html.Attributes.width 250,onClick address Start,style [("margin-top","20px")]] []
     ]
 
-getWonText : Html
-getWonText = h1 [center] [text "You win"]
+getFinishedText : String -> Html
+getFinishedText str = h1 [center] [text str]
 
 {-
 Update - Represents all interactions (actions) with the model .
@@ -102,18 +110,29 @@ update action model =
         ChangeColor tile -> changeColor model tile
         Start -> {
                     model | board = getRandomBoard,
-                            status = InGame
+                            status = InGame,
+                            moves = 10
                 }
 
 changeColor : Model -> Tile -> Model
 changeColor model tile =
     let 
         updatedBoard = updateBoard model.board 1 1 (getL (getL model.board 1) 1) tile
+        remainingMoves = model.moves - 1
     in
-        {
-            model | board = updatedBoard,
-                    status = getBoardStatus updatedBoard
-        }
+        if (remainingMoves > 0)
+            then
+                {
+                    model | board = updatedBoard,
+                            status = getBoardStatus updatedBoard,
+                            moves = model.moves - 1
+                }
+            else
+                {
+                    model | board = updatedBoard,
+                            status = Lost,
+                            moves = 0
+                }
 
 updateBoard : Matrix -> Int -> Int -> Tile -> Tile -> Matrix 
 updateBoard board x y originalColor nextColor = 

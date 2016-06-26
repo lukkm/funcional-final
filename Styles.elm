@@ -26,6 +26,14 @@ buttonsContainer = style
                         ("margin-top", "40px")
                         ]
 
+movesContainer : Attribute
+movesContainer = style 
+                        [
+                        ("margin","0 auto"),
+                        ("width","400px"),
+                        ("margin-top", "40px")
+                        ]
+
 marginTop : Int -> Attribute
 marginTop size = style [("margin-top", toString size ++ "px")]
 
