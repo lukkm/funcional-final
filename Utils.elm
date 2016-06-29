@@ -14,7 +14,7 @@ Utils - This class contains utility functions
 
 -}
 
-type Tile = Yellow | Blue | Red | Green
+type Tile = Yellow | Blue | Red | Green | Orange | Purple
 type Status = Starting | InGame | Won | Lost
 
 type alias Matrix = List (List Tile)
@@ -26,10 +26,12 @@ getTileFromNumber x =
  if x == 0 then Yellow
  else if x == 1 then Blue
  else if x == 2 then Red
+ else if x == 3 then Orange
+ else if x == 4 then Purple
  else Green
 
 randomInt : Seed -> (Int,Seed)
-randomInt seed = Random.generate (Random.int 0 3) seed
+randomInt seed = Random.generate (Random.int 0 5) seed
 
 randomMatrix : Random.Seed -> Int -> Int -> (Seed, Matrix)
 randomMatrix seed row col = 

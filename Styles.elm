@@ -22,8 +22,7 @@ buttonsContainer : Attribute
 buttonsContainer = style 
                         [
                         ("margin","0 auto"),
-                        ("width","100px"),
-                        ("margin-top", "40px")
+                        ("width","150px")
                         ]
 
 movesContainer : Attribute
@@ -91,6 +90,26 @@ blueTile =
         ("height", "20px")
         ]
 
+orangeTile : Attribute
+orangeTile = 
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","orange"),
+        ("width", "20px"),
+        ("height", "20px")
+        ]
+
+purpleTile : Attribute
+purpleTile = 
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","purple"),
+        ("width", "20px"),
+        ("height", "20px")
+        ]
+
 redTileInline : Attribute
 redTileInline =
     style
@@ -133,6 +152,30 @@ blueTileInline =
         [
         ("border","1px solid gray"),
         ("background-color","blue"),
+        ("margin-left","3px"),
+        ("width", "20px"),
+        ("height", "20px"),
+        ("display", "inline-block")
+        ]
+
+orangeTileInline : Attribute
+orangeTileInline = 
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","orange"),
+        ("margin-left","3px"),
+        ("width", "20px"),
+        ("height", "20px"),
+        ("display", "inline-block")
+        ]
+
+purpleTileInline : Attribute
+purpleTileInline = 
+    style
+        [
+        ("border","1px solid gray"),
+        ("background-color","purple"),
         ("margin-left","3px"),
         ("width", "20px"),
         ("height", "20px"),

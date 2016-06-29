@@ -40,6 +40,8 @@ getColorForTile t =
  if t == Yellow then yellowTile
  else if t == Blue then blueTile
  else if t == Red then redTile
+ else if t == Orange then orangeTile
+ else if t == Purple then purpleTile
  else greenTile
 
 --Generate a random board
@@ -88,11 +90,16 @@ getViewBoard model =
 
 getButtons : Signal.Address Action -> Html
 getButtons address = 
-    div [buttonsContainer] [
-        div [yellowTileInline,onClick address (ChangeColor Yellow)] [],
-        div [blueTileInline,onClick address (ChangeColor Blue)] [],
-        div [redTileInline,onClick address (ChangeColor Red)] [],
-        div [greenTileInline,onClick address (ChangeColor Green)] []
+    div [] [
+        h4 [] [text "Click on a color to change"],
+        div [buttonsContainer] [
+            div [yellowTileInline,onClick address (ChangeColor Yellow)] [],
+            div [blueTileInline,onClick address (ChangeColor Blue)] [],
+            div [redTileInline,onClick address (ChangeColor Red)] [],
+            div [orangeTileInline,onClick address (ChangeColor Orange)] [],
+            div [purpleTileInline,onClick address (ChangeColor Purple)] [],
+            div [greenTileInline,onClick address (ChangeColor Green)] []
+    ]
     ]
 
 getRemainingMoves : Model -> Html
@@ -154,20 +161,19 @@ changeColor : Model -> Tile -> Model
 changeColor model tile =
     let 
         updatedBoard = updateBoard model.board 1 1 (getL (getL model.board 1) 1) tile
+        boardStatus = getBoardStatus updatedBoard
         remainingMoves = model.moves - 1
     in
-        if (remainingMoves > 0)
+        if (boardStatus == Won || remainingMoves > 0)
             then
                 {
                     model | board = updatedBoard,
-                            seed = model.seed,
-                            status = getBoardStatus updatedBoard,
+                            status = boardStatus,
                             moves = model.moves - 1
                 }
             else
                 {
                     model | board = updatedBoard,
-                            seed = model.seed,
                             status = Lost,
                             moves = 0
                 }

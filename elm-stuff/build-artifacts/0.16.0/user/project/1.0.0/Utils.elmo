@@ -22,7 +22,7 @@ Elm.Utils.make = function (_elm) {
             return _U.eq(n,1) ? A2($List._op["::"],a,_p1) : A2($List._op["::"],_p0._0,A3(putL,_p1,a,n - 1));
          }
    });
-   var randomInt = function (seed) {    return A2($Random.generate,A2($Random.$int,0,3),seed);};
+   var randomInt = function (seed) {    return A2($Random.generate,A2($Random.$int,0,5),seed);};
    var bottom = bottom;
    var doFold = F2(function (x,l) {
       var _p2 = l;
@@ -64,11 +64,15 @@ Elm.Utils.make = function (_elm) {
    var Won = {ctor: "Won"};
    var InGame = {ctor: "InGame"};
    var Starting = {ctor: "Starting"};
+   var Purple = {ctor: "Purple"};
+   var Orange = {ctor: "Orange"};
    var Green = {ctor: "Green"};
    var Red = {ctor: "Red"};
    var Blue = {ctor: "Blue"};
    var Yellow = {ctor: "Yellow"};
-   var getTileFromNumber = function (x) {    return _U.eq(x,0) ? Yellow : _U.eq(x,1) ? Blue : _U.eq(x,2) ? Red : Green;};
+   var getTileFromNumber = function (x) {
+      return _U.eq(x,0) ? Yellow : _U.eq(x,1) ? Blue : _U.eq(x,2) ? Red : _U.eq(x,3) ? Orange : _U.eq(x,4) ? Purple : Green;
+   };
    var randomMatrix = F3(function (seed,row,col) {
       var range = A2(randomRange,seed,row * col);
       return {ctor: "_Tuple2"
@@ -90,6 +94,8 @@ Elm.Utils.make = function (_elm) {
                               ,Blue: Blue
                               ,Red: Red
                               ,Green: Green
+                              ,Orange: Orange
+                              ,Purple: Purple
                               ,Starting: Starting
                               ,InGame: InGame
                               ,Won: Won

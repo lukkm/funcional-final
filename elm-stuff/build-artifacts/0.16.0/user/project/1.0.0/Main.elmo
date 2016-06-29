@@ -49,9 +49,9 @@ Elm.Main.make = function (_elm) {
    var changeColor = F2(function (model,tile) {
       var remainingMoves = model.moves - 1;
       var updatedBoard = A5(updateBoard,model.board,1,1,A2($Utils.getL,A2($Utils.getL,model.board,1),1),tile);
-      return _U.cmp(remainingMoves,0) > 0 ? _U.update(model,
-      {board: updatedBoard,seed: model.seed,status: getBoardStatus(updatedBoard),moves: model.moves - 1}) : _U.update(model,
-      {board: updatedBoard,seed: model.seed,status: $Utils.Lost,moves: 0});
+      var boardStatus = getBoardStatus(updatedBoard);
+      return _U.eq(boardStatus,$Utils.Won) || _U.cmp(remainingMoves,0) > 0 ? _U.update(model,
+      {board: updatedBoard,status: boardStatus,moves: model.moves - 1}) : _U.update(model,{board: updatedBoard,status: $Utils.Lost,moves: 0});
    });
    var Moves = function (a) {    return {ctor: "Moves",_0: a};};
    var BoardSize = function (a) {    return {ctor: "BoardSize",_0: a};};
@@ -121,11 +121,16 @@ Elm.Main.make = function (_elm) {
    };
    var getButtons = function (address) {
       return A2($Html.div,
-      _U.list([$Styles.buttonsContainer]),
-      _U.list([A2($Html.div,_U.list([$Styles.yellowTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Yellow))]),_U.list([]))
-              ,A2($Html.div,_U.list([$Styles.blueTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Blue))]),_U.list([]))
-              ,A2($Html.div,_U.list([$Styles.redTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Red))]),_U.list([]))
-              ,A2($Html.div,_U.list([$Styles.greenTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Green))]),_U.list([]))]));
+      _U.list([]),
+      _U.list([A2($Html.h4,_U.list([]),_U.list([$Html.text("Click on a color to change")]))
+              ,A2($Html.div,
+              _U.list([$Styles.buttonsContainer]),
+              _U.list([A2($Html.div,_U.list([$Styles.yellowTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Yellow))]),_U.list([]))
+                      ,A2($Html.div,_U.list([$Styles.blueTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Blue))]),_U.list([]))
+                      ,A2($Html.div,_U.list([$Styles.redTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Red))]),_U.list([]))
+                      ,A2($Html.div,_U.list([$Styles.orangeTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Orange))]),_U.list([]))
+                      ,A2($Html.div,_U.list([$Styles.purpleTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Purple))]),_U.list([]))
+                      ,A2($Html.div,_U.list([$Styles.greenTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Green))]),_U.list([]))]))]));
    };
    var getFinishedView = F3(function (str,address,model) {
       return A2($Html.div,_U.list([$Styles.center]),_U.list([getFinishedText(str),A2(getPlayOptions,address,model),getPlayButton(address)]));
@@ -144,7 +149,8 @@ Elm.Main.make = function (_elm) {
          default: return _U.update(model,{startingMoves: _p6._0});}
    });
    var getColorForTile = function (t) {
-      return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : $Styles.greenTile;
+      return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : _U.eq(t,
+      $Utils.Orange) ? $Styles.orangeTile : _U.eq(t,$Utils.Purple) ? $Styles.purpleTile : $Styles.greenTile;
    };
    var getViewBoard = function (model) {
       return A2($Html.div,
