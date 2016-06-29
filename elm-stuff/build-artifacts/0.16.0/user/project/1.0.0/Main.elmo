@@ -53,6 +53,8 @@ Elm.Main.make = function (_elm) {
       {board: updatedBoard,seed: model.seed,status: getBoardStatus(updatedBoard),moves: model.moves - 1}) : _U.update(model,
       {board: updatedBoard,seed: model.seed,status: $Utils.Lost,moves: 0});
    });
+   var Moves = function (a) {    return {ctor: "Moves",_0: a};};
+   var BoardSize = function (a) {    return {ctor: "BoardSize",_0: a};};
    var Start = {ctor: "Start"};
    var ChangeColor = function (a) {    return {ctor: "ChangeColor",_0: a};};
    var getFinishedText = function (str) {    return A2($Html.h1,_U.list([$Styles.center]),_U.list([$Html.text(str)]));};
@@ -66,6 +68,54 @@ Elm.Main.make = function (_elm) {
               ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin-top",_1: "20px"}]))]),
       _U.list([]))]));
    };
+   var getPlayOptions = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.h3,_U.list([]),_U.list([$Html.text("Select Board Size: ")]))
+              ,A2($Html.input,
+              _U.list([$Html$Attributes.type$("radio")
+                      ,$Html$Attributes.checked(_U.eq(model.boardSize,6))
+                      ,A3($Html$Events.on,"change",$Html$Events.targetChecked,function (_p0) {    return A2($Signal.message,address,BoardSize(6));})]),
+              _U.list([]))
+              ,$Html.text("6x6")
+              ,A2($Html.br,_U.list([]),_U.list([]))
+              ,A2($Html.input,
+              _U.list([$Html$Attributes.type$("radio")
+                      ,$Html$Attributes.checked(_U.eq(model.boardSize,7))
+                      ,A3($Html$Events.on,"change",$Html$Events.targetChecked,function (_p1) {    return A2($Signal.message,address,BoardSize(7));})]),
+              _U.list([]))
+              ,$Html.text("7x7")
+              ,A2($Html.br,_U.list([]),_U.list([]))
+              ,A2($Html.input,
+              _U.list([$Html$Attributes.type$("radio")
+                      ,$Html$Attributes.checked(_U.eq(model.boardSize,8))
+                      ,A3($Html$Events.on,"change",$Html$Events.targetChecked,function (_p2) {    return A2($Signal.message,address,BoardSize(8));})]),
+              _U.list([]))
+              ,$Html.text("8x8")
+              ,A2($Html.br,_U.list([]),_U.list([]))
+              ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Select Game Mode: ")]))
+              ,A2($Html.input,
+              _U.list([$Html$Attributes.type$("radio")
+                      ,$Html$Attributes.checked(_U.eq(model.startingMoves,20))
+                      ,A3($Html$Events.on,"change",$Html$Events.targetChecked,function (_p3) {    return A2($Signal.message,address,Moves(20));})]),
+              _U.list([]))
+              ,$Html.text("Easy")
+              ,A2($Html.br,_U.list([]),_U.list([]))
+              ,A2($Html.input,
+              _U.list([$Html$Attributes.type$("radio")
+                      ,$Html$Attributes.checked(_U.eq(model.startingMoves,15))
+                      ,A3($Html$Events.on,"change",$Html$Events.targetChecked,function (_p4) {    return A2($Signal.message,address,Moves(15));})]),
+              _U.list([]))
+              ,$Html.text("Medium")
+              ,A2($Html.br,_U.list([]),_U.list([]))
+              ,A2($Html.input,
+              _U.list([$Html$Attributes.type$("radio")
+                      ,$Html$Attributes.checked(_U.eq(model.startingMoves,10))
+                      ,A3($Html$Events.on,"change",$Html$Events.targetChecked,function (_p5) {    return A2($Signal.message,address,Moves(10));})]),
+              _U.list([]))
+              ,$Html.text("Hard")
+              ,A2($Html.br,_U.list([]),_U.list([]))]));
+   });
    var getRemainingMoves = function (model) {
       return A2($Html.div,_U.list([$Styles.movesContainer]),_U.list([$Html.text(A2($String.append,"Remaining moves: ",$Basics.toString(model.moves)))]));
    };
@@ -77,19 +127,21 @@ Elm.Main.make = function (_elm) {
               ,A2($Html.div,_U.list([$Styles.redTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Red))]),_U.list([]))
               ,A2($Html.div,_U.list([$Styles.greenTileInline,A2($Html$Events.onClick,address,ChangeColor($Utils.Green))]),_U.list([]))]));
    };
-   var getFinishedView = F2(function (str,address) {
-      return A2($Html.div,_U.list([$Styles.center]),_U.list([getFinishedText(str),getPlayButton(address)]));
+   var getFinishedView = F3(function (str,address,model) {
+      return A2($Html.div,_U.list([$Styles.center]),_U.list([getFinishedText(str),A2(getPlayOptions,address,model),getPlayButton(address)]));
    });
-   var getStartingView = function (address) {    return A2($Html.div,_U.list([$Styles.center]),_U.list([getPlayButton(address)]));};
-   var getRandomBoard = function (seed) {    return A3($Utils.randomMatrix,seed,6,6);};
+   var getStartingView = F2(function (address,model) {
+      return A2($Html.div,_U.list([$Styles.center]),_U.list([A2(getPlayOptions,address,model),getPlayButton(address)]));
+   });
+   var getRandomBoard = F2(function (seed,x) {    return A3($Utils.randomMatrix,seed,x,x);});
    var update = F2(function (action,model) {
-      var _p0 = action;
-      if (_p0.ctor === "ChangeColor") {
-            return A2(changeColor,model,_p0._0);
-         } else {
-            var newBoard = getRandomBoard(model.seed);
-            return _U.update(model,{board: $Basics.snd(newBoard),seed: $Basics.fst(newBoard),status: $Utils.InGame,moves: 10});
-         }
+      var _p6 = action;
+      switch (_p6.ctor)
+      {case "ChangeColor": return A2(changeColor,model,_p6._0);
+         case "Start": var newBoard = A2(getRandomBoard,model.seed,model.boardSize);
+           return _U.update(model,{board: $Basics.snd(newBoard),seed: $Basics.fst(newBoard),status: $Utils.InGame,moves: model.startingMoves});
+         case "BoardSize": return _U.update(model,{boardSize: _p6._0});
+         default: return _U.update(model,{startingMoves: _p6._0});}
    });
    var getColorForTile = function (t) {
       return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : $Styles.greenTile;
@@ -112,27 +164,27 @@ Elm.Main.make = function (_elm) {
                     d);
                  }),
                  _U.list([]),
-                 _U.range(1,6)))]),
+                 _U.range(1,model.boardSize)))]),
                  c);
               }),
               _U.list([]),
-              _U.range(1,6)))]));
+              _U.range(1,model.boardSize)))]));
    };
    var getGameView = F2(function (address,model) {
       return A2($Html.div,_U.list([$Styles.center]),_U.list([getViewBoard(model),getButtons(address),getRemainingMoves(model)]));
    });
    var view = F2(function (address,model) {
-      var _p1 = model.status;
-      switch (_p1.ctor)
-      {case "Starting": return getStartingView(address);
+      var _p7 = model.status;
+      switch (_p7.ctor)
+      {case "Starting": return A2(getStartingView,address,model);
          case "InGame": return A2(getGameView,address,model);
-         case "Won": return A2(getFinishedView,"You win",address);
-         default: return A2(getFinishedView,"You lose",address);}
+         case "Won": return A3(getFinishedView,"You win",address,model);
+         default: return A3(getFinishedView,"You lose",address,model);}
    });
-   var Model = F4(function (a,b,c,d) {    return {board: a,seed: b,status: c,moves: d};});
+   var Model = F6(function (a,b,c,d,e,f) {    return {boardSize: a,board: b,seed: c,status: d,moves: e,startingMoves: f};});
    var startTime = Elm.Native.Port.make(_elm).inbound("startTime","Float",function (v) {    return typeof v === "number" ? v : _U.badPort("a number",v);});
    var startTimeSeed = $Random.initialSeed($Basics.round(startTime));
-   var init = {board: $Basics.snd(getRandomBoard(startTimeSeed)),seed: startTimeSeed,status: $Utils.Starting,moves: 10};
+   var init = {boardSize: 6,board: $Utils.bottom,seed: startTimeSeed,status: $Utils.Starting,moves: 20,startingMoves: 20};
    var main = $StartApp$Simple.start({model: init,view: view,update: update});
    return _elm.Main.values = {_op: _op
                              ,startTimeSeed: startTimeSeed
@@ -147,10 +199,13 @@ Elm.Main.make = function (_elm) {
                              ,getViewBoard: getViewBoard
                              ,getButtons: getButtons
                              ,getRemainingMoves: getRemainingMoves
+                             ,getPlayOptions: getPlayOptions
                              ,getPlayButton: getPlayButton
                              ,getFinishedText: getFinishedText
                              ,ChangeColor: ChangeColor
                              ,Start: Start
+                             ,BoardSize: BoardSize
+                             ,Moves: Moves
                              ,update: update
                              ,changeColor: changeColor
                              ,updateBoard: updateBoard

@@ -1,5 +1,5 @@
 import Html exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick,targetChecked,on)
 import Html.Attributes exposing (style,type',checked,src)
 import StartApp.Simple as StartApp
 import Random exposing (Seed)
@@ -24,14 +24,16 @@ startTimeSeed = Random.initialSeed <| round startTime
 
 type alias Model = 
     {
+    boardSize: Int,
     board : Matrix,
     seed : Seed,
     status : Status,
-    moves : Int
+    moves : Int,
+    startingMoves : Int
     }
 
 init : Model
-init = { board = snd (getRandomBoard startTimeSeed), seed = startTimeSeed, status = Starting, moves = 10 }
+init = { boardSize = 6, board = bottom, seed = startTimeSeed, status = Starting, moves = 20, startingMoves = 20 }
 
 getColorForTile : Tile -> Attribute
 getColorForTile t = 
@@ -41,15 +43,15 @@ getColorForTile t =
  else greenTile
 
 --Generate a random board
-getRandomBoard : Seed -> (Seed, Matrix)
-getRandomBoard seed = randomMatrix seed 6 6
+getRandomBoard : Seed -> Int -> (Seed, Matrix)
+getRandomBoard seed x = randomMatrix seed x x
 
 view address model = 
     case model.status of
-        Starting -> getStartingView address
+        Starting -> getStartingView address model
         InGame -> getGameView address model
-        Won -> getFinishedView "You win" address
-        Lost -> getFinishedView "You lose" address
+        Won -> getFinishedView "You win" address model
+        Lost -> getFinishedView "You lose" address model
 
 getGameView : Signal.Address Action -> Model -> Html
 getGameView address model = 
@@ -59,18 +61,20 @@ getGameView address model =
         getRemainingMoves model
     ]
 
-getStartingView : Signal.Address Action -> Html
-getStartingView address = 
+getStartingView : Signal.Address Action -> Model -> Html
+getStartingView address model = 
     div [center] 
         [   
+            getPlayOptions address model,
             getPlayButton address
         ]
 
-getFinishedView : String -> Signal.Address Action -> Html
-getFinishedView str address = 
+getFinishedView : String -> Signal.Address Action -> Model -> Html
+getFinishedView str address model = 
     div[center] 
        [
             getFinishedText str,
+            getPlayOptions address model,
             getPlayButton address
        ]
 
@@ -79,7 +83,7 @@ getViewBoard model =
     div [centerMarginTop 40] [
         h1 [center] [text "FillZone"],
         table [centerMarginTop 20] (foldr (\x c -> [tr [tableBorder] (
-            foldr (\y d -> [td [getColorForTile (getM model.board x y)] [text ""]] ++ d) [] [1..6])] ++ c) [] [1..6])
+            foldr (\y d -> [td [getColorForTile (getM model.board x y)] [text ""]] ++ d) [] [1..model.boardSize])] ++ c) [] [1..model.boardSize])
     ] 
 
 getButtons : Signal.Address Action -> Html
@@ -95,6 +99,24 @@ getRemainingMoves : Model -> Html
 getRemainingMoves model = 
     div [movesContainer] [text (append "Remaining moves: " (toString model.moves))]
 
+getPlayOptions : Signal.Address Action -> Model -> Html
+getPlayOptions address model= 
+     div [] [
+            h3 [] [text "Select Board Size: "],
+            input [ type' "radio", checked (model.boardSize == 6), on "change" targetChecked (\_ -> Signal.message address (BoardSize 6))] [], 
+            text "6x6" , br [] [] ,
+            input [ type' "radio", checked (model.boardSize == 7), on "change" targetChecked (\_ -> Signal.message address (BoardSize 7))] []  , 
+            text "7x7" , br [] [] ,
+            input [ type' "radio", checked (model.boardSize == 8), on "change" targetChecked (\_ -> Signal.message address (BoardSize 8))] []  , 
+            text "8x8" , br [] [],
+            h3 [] [text "Select Game Mode: "],
+            input [ type' "radio", checked (model.startingMoves == 20), on "change" targetChecked (\_ -> Signal.message address (Moves 20))] [], 
+            text "Easy" , br [] [] ,
+            input [ type' "radio", checked (model.startingMoves == 15), on "change" targetChecked (\_ -> Signal.message address (Moves 15))] []  , 
+            text "Medium" , br [] [] ,
+            input [ type' "radio", checked (model.startingMoves == 10), on "change" targetChecked (\_ -> Signal.message address (Moves 10))] []  , 
+            text "Hard" , br [] []]
+
 getPlayButton : Signal.Address Action -> Html
 getPlayButton address =
     div [style [("margin", "0 auto"),("width","250px")]] 
@@ -109,7 +131,7 @@ getFinishedText str = h1 [center] [text str]
 Update - Represents all interactions (actions) with the model .
 --------------------------------------------------------------
 -}
-type Action = ChangeColor Tile | Start
+type Action = ChangeColor Tile | Start | BoardSize Int | Moves Int
 
 update : Action -> Model -> Model
 update action model = 
@@ -117,14 +139,16 @@ update action model =
         ChangeColor tile -> changeColor model tile
         Start -> 
             let
-                newBoard = getRandomBoard model.seed
+                newBoard = getRandomBoard model.seed model.boardSize
             in
                 {
                     model | board = snd newBoard,
                             seed = fst newBoard,
                             status = InGame,
-                            moves = 10
+                            moves = model.startingMoves
                 }
+        BoardSize x -> { model | boardSize = x }
+        Moves x -> { model | startingMoves = x }
 
 changeColor : Model -> Tile -> Model
 changeColor model tile =

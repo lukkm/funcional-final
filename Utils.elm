@@ -41,7 +41,6 @@ randomMatrix seed row col =
 
 randomRange : Seed -> Int -> List (Int, Seed)
 randomRange initialSeed size = foldr doFold [(0, initialSeed)] [1..size]
-{-randomMatrix row col = [[getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 1, getTileFromNumber 2],[getTileFromNumber 2, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1],[getTileFromNumber 0, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 3],[getTileFromNumber 1, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 1],[getTileFromNumber 2, getTileFromNumber 0, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 0],[getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 2]]-} 
 
 doFold : Int -> List (Int, Seed) -> List (Int, Seed)
 doFold x l = 
