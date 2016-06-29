@@ -8,6 +8,7 @@ Elm.Utils.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Random = Elm.Random.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21,17 +22,28 @@ Elm.Utils.make = function (_elm) {
             return _U.eq(n,1) ? A2($List._op["::"],a,_p1) : A2($List._op["::"],_p0._0,A3(putL,_p1,a,n - 1));
          }
    });
+   var randomInt = function (seed) {    return A2($Random.generate,A2($Random.$int,0,3),seed);};
    var bottom = bottom;
+   var doFold = F2(function (x,l) {
+      var _p2 = l;
+      if (_p2.ctor === "[]") {
+            return bottom;
+         } else {
+            var _p3 = _p2._0;
+            return A2($List._op["::"],randomInt($Basics.snd(_p3)),A2($List._op["::"],_p3,_p2._1));
+         }
+   });
+   var randomRange = F2(function (initialSeed,size) {    return A3($List.foldr,doFold,_U.list([{ctor: "_Tuple2",_0: 0,_1: initialSeed}]),_U.range(1,size));});
    var getL = F2(function (l,n) {
       getL: while (true) {
-         var _p2 = l;
-         if (_p2.ctor === "[]") {
+         var _p4 = l;
+         if (_p4.ctor === "[]") {
                return bottom;
             } else {
-               if (_U.eq(n,1)) return _p2._0; else {
-                     var _v2 = _p2._1,_v3 = n - 1;
-                     l = _v2;
-                     n = _v3;
+               if (_U.eq(n,1)) return _p4._0; else {
+                     var _v3 = _p4._1,_v4 = n - 1;
+                     l = _v3;
+                     n = _v4;
                      continue getL;
                   }
             }
@@ -39,13 +51,13 @@ Elm.Utils.make = function (_elm) {
    });
    var getM = F3(function (m,r,c) {    return A2(getL,A2(getL,m,r),c);});
    var putM = F4(function (m,r,c,elem) {
-      var _p3 = m;
-      if (_p3.ctor === "[]") {
+      var _p5 = m;
+      if (_p5.ctor === "[]") {
             return bottom;
          } else {
-            var _p5 = _p3._1;
-            var _p4 = _p3._0;
-            return _U.eq(r,1) ? A2($List._op["::"],A3(putL,_p4,elem,c),_p5) : A2($List._op["::"],_p4,A4(putM,_p5,r - 1,c,elem));
+            var _p7 = _p5._1;
+            var _p6 = _p5._0;
+            return _U.eq(r,1) ? A2($List._op["::"],A3(putL,_p6,elem,c),_p7) : A2($List._op["::"],_p6,A4(putM,_p7,r - 1,c,elem));
          }
    });
    var Lost = {ctor: "Lost"};
@@ -57,18 +69,21 @@ Elm.Utils.make = function (_elm) {
    var Blue = {ctor: "Blue"};
    var Yellow = {ctor: "Yellow"};
    var getTileFromNumber = function (x) {    return _U.eq(x,0) ? Yellow : _U.eq(x,1) ? Blue : _U.eq(x,2) ? Red : Green;};
-   var randomMatrix = F2(function (row,col) {
-      return _U.list([_U.list([getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(1),getTileFromNumber(2)])
-                     ,_U.list([getTileFromNumber(2),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2),getTileFromNumber(1)])
-                     ,_U.list([getTileFromNumber(0),getTileFromNumber(2),getTileFromNumber(3),getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(3)])
-                     ,_U.list([getTileFromNumber(1),getTileFromNumber(1),getTileFromNumber(3),getTileFromNumber(2),getTileFromNumber(1),getTileFromNumber(1)])
-                     ,_U.list([getTileFromNumber(2),getTileFromNumber(0),getTileFromNumber(0),getTileFromNumber(1),getTileFromNumber(2),getTileFromNumber(0)])
-                     ,_U.list([getTileFromNumber(3)
-                              ,getTileFromNumber(2)
-                              ,getTileFromNumber(3)
-                              ,getTileFromNumber(3)
-                              ,getTileFromNumber(0)
-                              ,getTileFromNumber(2)])]);
+   var randomMatrix = F3(function (seed,row,col) {
+      var range = A2(randomRange,seed,row * col);
+      return {ctor: "_Tuple2"
+             ,_0: $Basics.snd(A2(getL,range,1))
+             ,_1: A3($List.foldr,
+             F2(function (x,c) {
+                return A2($List._op["::"],
+                A3($List.foldr,
+                F2(function (y,d) {    return A2($List._op["::"],getTileFromNumber($Basics.fst(A2(getL,range,x * col + y))),d);}),
+                _U.list([]),
+                _U.range(1,col)),
+                c);
+             }),
+             _U.list([]),
+             _U.range(0,row - 1))};
    });
    return _elm.Utils.values = {_op: _op
                               ,Yellow: Yellow
@@ -81,7 +96,10 @@ Elm.Utils.make = function (_elm) {
                               ,Lost: Lost
                               ,bottom: bottom
                               ,getTileFromNumber: getTileFromNumber
+                              ,randomInt: randomInt
                               ,randomMatrix: randomMatrix
+                              ,randomRange: randomRange
+                              ,doFold: doFold
                               ,getL: getL
                               ,putL: putL
                               ,sizeOf: sizeOf

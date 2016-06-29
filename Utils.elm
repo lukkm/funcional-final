@@ -1,8 +1,11 @@
 module Utils where
 
 import Random
+import Random exposing (Seed)
+import Random exposing (generate, int)
 import Random.Extra
 import Random.Float
+import List exposing (foldr)
 import Time
 
 {-
@@ -18,21 +21,33 @@ type alias Matrix = List (List Tile)
 
 bottom = bottom
 
-getTileFromNumber : number -> Tile
+getTileFromNumber : Int -> Tile
 getTileFromNumber x = 
  if x == 0 then Yellow
  else if x == 1 then Blue
  else if x == 2 then Red
  else Green
 
-{-
-startTimeSeed : Random.Seed
-startTimeSeed = Random.initialSeed <| round Time.timestamp
--}
+randomInt : Seed -> (Int,Seed)
+randomInt seed = Random.generate (Random.int 0 3) seed
 
-randomMatrix : Int -> Int -> Matrix
-{- randomMatrix row col = List.repeat row (List.repeat col (fst (Random.generate (Random.map getTileFromNumber (Random.int 0 3))))) -}
-randomMatrix row col = [[getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 1, getTileFromNumber 2],[getTileFromNumber 2, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1],[getTileFromNumber 0, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 3],[getTileFromNumber 1, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 1],[getTileFromNumber 2, getTileFromNumber 0, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 0],[getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 2]]
+randomMatrix : Random.Seed -> Int -> Int -> (Seed, Matrix)
+randomMatrix seed row col = 
+    let 
+        range = randomRange seed (row * col)
+    in 
+        (snd (getL range 1), foldr (\x c -> 
+            (foldr (\y d -> (getTileFromNumber (fst (getL range (x * col + y)))) :: d) [] [1..col]) :: c) [] [0..(row-1)])
+
+randomRange : Seed -> Int -> List (Int, Seed)
+randomRange initialSeed size = foldr doFold [(0, initialSeed)] [1..size]
+{-randomMatrix row col = [[getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 1, getTileFromNumber 2],[getTileFromNumber 2, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1],[getTileFromNumber 0, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 3],[getTileFromNumber 1, getTileFromNumber 1, getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 1, getTileFromNumber 1],[getTileFromNumber 2, getTileFromNumber 0, getTileFromNumber 0, getTileFromNumber 1, getTileFromNumber 2, getTileFromNumber 0],[getTileFromNumber 3, getTileFromNumber 2, getTileFromNumber 3, getTileFromNumber 3, getTileFromNumber 0, getTileFromNumber 2]]-} 
+
+doFold : Int -> List (Int, Seed) -> List (Int, Seed)
+doFold x l = 
+    case l of 
+        [] -> bottom 
+        x::xs -> randomInt (snd x) :: (x::xs)
 
 getL : List a -> Int -> a
 getL l n = 

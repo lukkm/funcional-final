@@ -2,6 +2,7 @@ import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (style,type',checked,src)
 import StartApp.Simple as StartApp
+import Random exposing (Seed)
 
 --Files .elm
 import Utils exposing (..)
@@ -16,15 +17,21 @@ Model - Game logic.
 
 -}
 
+port startTime : Float
+
+startTimeSeed : Seed
+startTimeSeed = Random.initialSeed <| round startTime
+
 type alias Model = 
     {
     board : Matrix,
+    seed : Seed,
     status : Status,
     moves : Int
     }
 
 init : Model
-init = { board = getRandomBoard, status = Starting, moves = 10 }
+init = { board = snd (getRandomBoard startTimeSeed), seed = startTimeSeed, status = Starting, moves = 10 }
 
 getColorForTile : Tile -> Attribute
 getColorForTile t = 
@@ -34,8 +41,8 @@ getColorForTile t =
  else greenTile
 
 --Generate a random board
-getRandomBoard : Matrix
-getRandomBoard = randomMatrix 6 6
+getRandomBoard : Seed -> (Seed, Matrix)
+getRandomBoard seed = randomMatrix seed 6 6
 
 view address model = 
     case model.status of
@@ -108,8 +115,13 @@ update : Action -> Model -> Model
 update action model = 
     case action of
         ChangeColor tile -> changeColor model tile
-        Start -> {
-                    model | board = getRandomBoard,
+        Start -> 
+            let
+                newBoard = getRandomBoard model.seed
+            in
+                {
+                    model | board = snd newBoard,
+                            seed = fst newBoard,
                             status = InGame,
                             moves = 10
                 }
@@ -124,12 +136,14 @@ changeColor model tile =
             then
                 {
                     model | board = updatedBoard,
+                            seed = model.seed,
                             status = getBoardStatus updatedBoard,
                             moves = model.moves - 1
                 }
             else
                 {
                     model | board = updatedBoard,
+                            seed = model.seed,
                             status = Lost,
                             moves = 0
                 }
