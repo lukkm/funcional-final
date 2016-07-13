@@ -60,6 +60,30 @@ Elm.Utils.make = function (_elm) {
             return _U.eq(r,1) ? A2($List._op["::"],A3(putL,_p6,elem,c),_p7) : A2($List._op["::"],_p6,A4(putM,_p7,r - 1,c,elem));
          }
    });
+   var updateBoard = F5(function (board,x,y,originalColor,nextColor) {
+      updateBoard: while (true) if (_U.cmp(x,1) < 0 || (_U.cmp(y,1) < 0 || (_U.cmp(x,sizeOf(board)) > 0 || (_U.cmp(y,sizeOf(board)) > 0 || (!_U.eq(A3(getM,
+      board,
+      x,
+      y),
+      originalColor) || _U.eq(originalColor,nextColor)))))) return board; else {
+            var _v6 = A5(updateBoard,
+            A5(updateBoard,A5(updateBoard,A4(putM,board,x,y,nextColor),x,y - 1,originalColor,nextColor),x - 1,y,originalColor,nextColor),
+            x,
+            y + 1,
+            originalColor,
+            nextColor),
+            _v7 = x + 1,
+            _v8 = y,
+            _v9 = originalColor,
+            _v10 = nextColor;
+            board = _v6;
+            x = _v7;
+            y = _v8;
+            originalColor = _v9;
+            nextColor = _v10;
+            continue updateBoard;
+         }
+   });
    var Lost = {ctor: "Lost"};
    var Won = {ctor: "Won"};
    var InGame = {ctor: "InGame"};
@@ -105,6 +129,7 @@ Elm.Utils.make = function (_elm) {
                               ,randomInt: randomInt
                               ,randomMatrix: randomMatrix
                               ,randomRange: randomRange
+                              ,updateBoard: updateBoard
                               ,doFold: doFold
                               ,getL: getL
                               ,putL: putL

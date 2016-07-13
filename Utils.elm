@@ -44,6 +44,14 @@ randomMatrix seed row col =
 randomRange : Seed -> Int -> List (Int, Seed)
 randomRange initialSeed size = foldr doFold [(0, initialSeed)] [1..size]
 
+updateBoard : Matrix -> Int -> Int -> Tile -> Tile -> Matrix 
+updateBoard board x y originalColor nextColor = 
+    if (x < 1 || y < 1 || x > (sizeOf board) || y > (sizeOf board) || (getM board x y) /= originalColor || originalColor == nextColor)
+        then
+            board
+        else
+            updateBoard (updateBoard (updateBoard (updateBoard (putM board x y nextColor) x (y-1) originalColor nextColor) (x-1) y originalColor nextColor) x (y+1) originalColor nextColor) (x+1) y originalColor nextColor
+
 doFold : Int -> List (Int, Seed) -> List (Int, Seed)
 doFold x l = 
     case l of 

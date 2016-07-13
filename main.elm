@@ -6,8 +6,10 @@ import Random exposing (Seed)
 
 --Files .elm
 import Utils exposing (..)
+import GraphUtils exposing (..)
 import Styles exposing (..)
 import Debug exposing (..)
+import Graph exposing (Graph, toString')
 import List exposing (foldr)
 import String exposing (append)
 
@@ -25,7 +27,7 @@ startTimeSeed = Random.initialSeed <| round startTime
 type alias Model = 
     {
     boardSize: Int,
-    board : Matrix,
+    board : Maybe Matrix,
     seed : Seed,
     status : Status,
     moves : Int,
@@ -33,7 +35,7 @@ type alias Model =
     }
 
 init : Model
-init = { boardSize = 6, board = bottom, seed = startTimeSeed, status = Starting, moves = 20, startingMoves = 20 }
+init = { boardSize = 6, board = Nothing, seed = startTimeSeed, status = Starting, moves = 20, startingMoves = 20 }
 
 getColorForTile : Tile -> Attribute
 getColorForTile t = 
@@ -60,7 +62,8 @@ getGameView address model =
     div [center] [
         getViewBoard model,
         getButtons address,
-        getRemainingMoves model
+        getRemainingMoves model,
+        getSuggestedMoveView model
     ]
 
 getStartingView : Signal.Address Action -> Model -> Html
@@ -82,11 +85,14 @@ getFinishedView str address model =
 
 getViewBoard : Model -> Html
 getViewBoard model =
-    div [centerMarginTop 40] [
-        h1 [center] [text "FillZone"],
-        table [centerMarginTop 20] (foldr (\x c -> [tr [tableBorder] (
-            foldr (\y d -> [td [getColorForTile (getM model.board x y)] [text ""]] ++ d) [] [1..model.boardSize])] ++ c) [] [1..model.boardSize])
-    ] 
+    case model.board of
+        Nothing -> div [centerMarginTop 40] [text "Error"]
+        Just board -> 
+            div [centerMarginTop 40] [
+                h1 [center] [text "FillZone"],
+                table [centerMarginTop 20] (foldr (\x c -> [tr [tableBorder] (
+                    foldr (\y d -> [td [getColorForTile (getM board x y)] [text ""]] ++ d) [] [1..model.boardSize])] ++ c) [] [1..model.boardSize])
+            ] 
 
 getButtons : Signal.Address Action -> Html
 getButtons address = 
@@ -100,11 +106,19 @@ getButtons address =
             div [purpleTileInline,onClick address (ChangeColor Purple)] [],
             div [greenTileInline,onClick address (ChangeColor Green)] []
     ]
-    ]
+  ]
 
 getRemainingMoves : Model -> Html
 getRemainingMoves model = 
     div [movesContainer] [text (append "Remaining moves: " (toString model.moves))]
+
+getSuggestedMoveView : Model -> Html
+getSuggestedMoveView model =
+    case model.board of
+        Nothing -> div [] []
+        Just board -> div [movesContainer] [
+            div [] [text "Suggested move: ", div [fst (getSuggestedMoveStyle board)] []]
+        ]
 
 getPlayOptions : Signal.Address Action -> Model -> Html
 getPlayOptions address model= 
@@ -149,7 +163,7 @@ update action model =
                 newBoard = getRandomBoard model.seed model.boardSize
             in
                 {
-                    model | board = snd newBoard,
+                    model | board = Just (snd newBoard),
                             seed = fst newBoard,
                             status = InGame,
                             moves = model.startingMoves
@@ -159,32 +173,27 @@ update action model =
 
 changeColor : Model -> Tile -> Model
 changeColor model tile =
-    let 
-        updatedBoard = updateBoard model.board 1 1 (getL (getL model.board 1) 1) tile
-        boardStatus = getBoardStatus updatedBoard
-        remainingMoves = model.moves - 1
-    in
-        if (boardStatus == Won || remainingMoves > 0)
-            then
-                {
-                    model | board = updatedBoard,
-                            status = boardStatus,
-                            moves = model.moves - 1
-                }
-            else
-                {
-                    model | board = updatedBoard,
-                            status = Lost,
-                            moves = 0
-                }
-
-updateBoard : Matrix -> Int -> Int -> Tile -> Tile -> Matrix 
-updateBoard board x y originalColor nextColor = 
-    if (x < 1 || y < 1 || x > (sizeOf board) || y > (sizeOf board) || (getM board x y) /= originalColor || originalColor == nextColor)
-        then
-            board
-        else
-            updateBoard (updateBoard (updateBoard (updateBoard (putM board x y nextColor) x (y-1) originalColor nextColor) (x-1) y originalColor nextColor) x (y+1) originalColor nextColor) (x+1) y originalColor nextColor
+    case model.board of
+        Nothing -> model
+        Just board ->
+            let 
+                updatedBoard = updateBoard board 1 1 (getL (getL board 1) 1) tile
+                boardStatus = getBoardStatus updatedBoard
+                remainingMoves = model.moves - 1
+            in
+                if (boardStatus == Won || remainingMoves > 0)
+                    then
+                        {
+                            model | board = Just updatedBoard,
+                                    status = boardStatus,
+                                    moves = model.moves - 1
+                        }
+                    else
+                        {
+                            model | board = Just updatedBoard,
+                                    status = Lost,
+                                    moves = 0
+                        }
 
 getBoardStatus : Matrix -> Status
 getBoardStatus board = getBoardStatusRec board (getM board 1 1) 1 1
