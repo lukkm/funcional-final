@@ -55,14 +55,13 @@ getSuggestedMoveStyle : Matrix -> (Attribute, Int)
 getSuggestedMoveStyle board = List.foldr (doGraphFold board) (yellowTileInline, 1000000) [(Yellow, yellowTileInline), (Blue, blueTileInline), (Red, redTileInline), (Green, greenTileInline), (Orange, orangeTileInline), (Purple, purpleTileInline)]
 
 doGraphFold : Matrix -> (Tile, Attribute) -> (Attribute, Int) -> (Attribute, Int)
-doGraphFold board currentTile lastAttr = getGraphComparison (updateBoard board 1 1 (getL (getL board 1) 1) (fst currentTile)) (snd currentTile) lastAttr
-
-getGraphComparison : Matrix -> Attribute -> (Attribute, Int) -> (Attribute, Int)
-getGraphComparison board newAttr lastPair = 
-    let
-        newValue = getGraphSum (generateGraph board)
+doGraphFold board currentTile lastAttr = 
+    let 
+        newBoard = (updateBoard board 1 1 (getL (getL board 1) 1) (fst currentTile)) 
+        newAttr = (snd currentTile)
+        newValue = getGraphSum (generateGraph newBoard)
     in
-        if (newValue < snd lastPair) then
-            (newAttr, newValue)
-        else
-            lastPair
+        if (newValue < snd lastAttr) then
+                (newAttr, newValue)
+            else
+                lastAttr

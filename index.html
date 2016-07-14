@@ -12374,15 +12374,11 @@ Elm.GraphUtils.make = function (_elm) {
       incomingColor);
    });
    var generateGraph = function (board) {    return A6(createGraph,$Graph.empty,board,1,1,0,A3($Utils.getM,board,1,1));};
-   var getGraphComparison = F3(function (board,newAttr,lastPair) {
-      var newValue = getGraphSum(generateGraph(board));
-      return _U.cmp(newValue,$Basics.snd(lastPair)) < 0 ? {ctor: "_Tuple2",_0: newAttr,_1: newValue} : lastPair;
-   });
    var doGraphFold = F3(function (board,currentTile,lastAttr) {
-      return A3(getGraphComparison,
-      A5($Utils.updateBoard,board,1,1,A2($Utils.getL,A2($Utils.getL,board,1),1),$Basics.fst(currentTile)),
-      $Basics.snd(currentTile),
-      lastAttr);
+      var newAttr = $Basics.snd(currentTile);
+      var newBoard = A5($Utils.updateBoard,board,1,1,A2($Utils.getL,A2($Utils.getL,board,1),1),$Basics.fst(currentTile));
+      var newValue = getGraphSum(generateGraph(newBoard));
+      return _U.cmp(newValue,$Basics.snd(lastAttr)) < 0 ? {ctor: "_Tuple2",_0: newAttr,_1: newValue} : lastAttr;
    });
    var getSuggestedMoveStyle = function (board) {
       return A3($List.foldr,
@@ -12402,8 +12398,7 @@ Elm.GraphUtils.make = function (_elm) {
                                    ,createGraphRec: createGraphRec
                                    ,getGraphSum: getGraphSum
                                    ,getSuggestedMoveStyle: getSuggestedMoveStyle
-                                   ,doGraphFold: doGraphFold
-                                   ,getGraphComparison: getGraphComparison};
+                                   ,doGraphFold: doGraphFold};
 };Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
    "use strict";
