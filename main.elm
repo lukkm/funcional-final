@@ -30,12 +30,13 @@ type alias Model =
     board : Maybe Matrix,
     seed : Seed,
     status : Status,
+    showHint : Bool,
     moves : Int,
     startingMoves : Int
     }
 
 init : Model
-init = { boardSize = 6, board = Nothing, seed = startTimeSeed, status = Starting, moves = 20, startingMoves = 20 }
+init = { boardSize = 6, board = Nothing, seed = startTimeSeed, status = Starting, showHint = False, moves = 20, startingMoves = 20 }
 
 getColorForTile : Tile -> Attribute
 getColorForTile t = 
@@ -63,7 +64,7 @@ getGameView address model =
         getViewBoard model,
         getButtons address,
         getRemainingMoves model,
-        getSuggestedMoveView model
+        getSuggestedMoveView address model
     ]
 
 getStartingView : Signal.Address Action -> Model -> Html
@@ -112,13 +113,16 @@ getRemainingMoves : Model -> Html
 getRemainingMoves model = 
     div [movesContainer] [text (append "Remaining moves: " (toString model.moves))]
 
-getSuggestedMoveView : Model -> Html
-getSuggestedMoveView model =
-    case model.board of
+getSuggestedMoveView : Signal.Address Action -> Model -> Html
+getSuggestedMoveView address model =
+    if (model.showHint) then
+        case model.board of
         Nothing -> div [] []
         Just board -> div [movesContainer] [
             div [] [text "Suggested move: ", div [fst (getSuggestedMoveStyle board)] []]
         ]
+    else
+        div [showHintButton, onClick address ShowHint] [text "View Hint"]
 
 getPlayOptions : Signal.Address Action -> Model -> Html
 getPlayOptions address model= 
@@ -152,7 +156,7 @@ getFinishedText str = h1 [center] [text str]
 Update - Represents all interactions (actions) with the model .
 --------------------------------------------------------------
 -}
-type Action = ChangeColor Tile | Start | BoardSize Int | Moves Int
+type Action = ChangeColor Tile | Start | BoardSize Int | Moves Int | ShowHint
 
 update : Action -> Model -> Model
 update action model = 
@@ -170,6 +174,7 @@ update action model =
                 }
         BoardSize x -> { model | boardSize = x }
         Moves x -> { model | startingMoves = x }
+        ShowHint -> { model | showHint = True }
 
 changeColor : Model -> Tile -> Model
 changeColor model tile =
@@ -186,13 +191,15 @@ changeColor model tile =
                         {
                             model | board = Just updatedBoard,
                                     status = boardStatus,
-                                    moves = model.moves - 1
+                                    moves = model.moves - 1,
+                                    showHint = False
                         }
                     else
                         {
                             model | board = Just updatedBoard,
                                     status = Lost,
-                                    moves = 0
+                                    moves = 0,
+                                    showHint = False
                         }
 
 getBoardStatus : Matrix -> Status

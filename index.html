@@ -12134,6 +12134,11 @@ Elm.Styles.make = function (_elm) {
    var marginTop = function (size) {
       return $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin-top",_1: A2($Basics._op["++"],$Basics.toString(size),"px")}]));
    };
+   var showHintButton = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}
+                                                       ,{ctor: "_Tuple2",_0: "width",_1: "200px"}
+                                                       ,{ctor: "_Tuple2",_0: "background",_1: "#DDDDDD"}
+                                                       ,{ctor: "_Tuple2",_0: "padding",_1: "10px"}
+                                                       ,{ctor: "_Tuple2",_0: "margin-top",_1: "40px"}]));
    var movesContainer = $Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "margin",_1: "0 auto"}
                                                        ,{ctor: "_Tuple2",_0: "width",_1: "400px"}
                                                        ,{ctor: "_Tuple2",_0: "margin-top",_1: "40px"}]));
@@ -12149,6 +12154,7 @@ Elm.Styles.make = function (_elm) {
                                ,centerMarginTop: centerMarginTop
                                ,buttonsContainer: buttonsContainer
                                ,movesContainer: movesContainer
+                               ,showHintButton: showHintButton
                                ,marginTop: marginTop
                                ,marginLeft: marginLeft
                                ,inline: inline
@@ -12437,10 +12443,11 @@ Elm.Main.make = function (_elm) {
             var updatedBoard = A5($Utils.updateBoard,_p1,1,1,A2($Utils.getL,A2($Utils.getL,_p1,1),1),tile);
             var boardStatus = getBoardStatus(updatedBoard);
             return _U.eq(boardStatus,$Utils.Won) || _U.cmp(remainingMoves,0) > 0 ? _U.update(model,
-            {board: $Maybe.Just(updatedBoard),status: boardStatus,moves: model.moves - 1}) : _U.update(model,
-            {board: $Maybe.Just(updatedBoard),status: $Utils.Lost,moves: 0});
+            {board: $Maybe.Just(updatedBoard),status: boardStatus,moves: model.moves - 1,showHint: false}) : _U.update(model,
+            {board: $Maybe.Just(updatedBoard),status: $Utils.Lost,moves: 0,showHint: false});
          }
    });
+   var ShowHint = {ctor: "ShowHint"};
    var Moves = function (a) {    return {ctor: "Moves",_0: a};};
    var BoardSize = function (a) {    return {ctor: "BoardSize",_0: a};};
    var Start = {ctor: "Start"};
@@ -12504,18 +12511,20 @@ Elm.Main.make = function (_elm) {
               ,$Html.text("Hard")
               ,A2($Html.br,_U.list([]),_U.list([]))]));
    });
-   var getSuggestedMoveView = function (model) {
-      var _p8 = model.board;
-      if (_p8.ctor === "Nothing") {
-            return A2($Html.div,_U.list([]),_U.list([]));
-         } else {
-            return A2($Html.div,
-            _U.list([$Styles.movesContainer]),
-            _U.list([A2($Html.div,
-            _U.list([]),
-            _U.list([$Html.text("Suggested move: "),A2($Html.div,_U.list([$Basics.fst($GraphUtils.getSuggestedMoveStyle(_p8._0))]),_U.list([]))]))]));
-         }
-   };
+   var getSuggestedMoveView = F2(function (address,model) {
+      if (model.showHint) {
+            var _p8 = model.board;
+            if (_p8.ctor === "Nothing") {
+                  return A2($Html.div,_U.list([]),_U.list([]));
+               } else {
+                  return A2($Html.div,
+                  _U.list([$Styles.movesContainer]),
+                  _U.list([A2($Html.div,
+                  _U.list([]),
+                  _U.list([$Html.text("Suggested move: "),A2($Html.div,_U.list([$Basics.fst($GraphUtils.getSuggestedMoveStyle(_p8._0))]),_U.list([]))]))]));
+               }
+         } else return A2($Html.div,_U.list([$Styles.showHintButton,A2($Html$Events.onClick,address,ShowHint)]),_U.list([$Html.text("View Hint")]));
+   });
    var getRemainingMoves = function (model) {
       return A2($Html.div,_U.list([$Styles.movesContainer]),_U.list([$Html.text(A2($String.append,"Remaining moves: ",$Basics.toString(model.moves)))]));
    };
@@ -12546,7 +12555,8 @@ Elm.Main.make = function (_elm) {
          case "Start": var newBoard = A2(getRandomBoard,model.seed,model.boardSize);
            return _U.update(model,{board: $Maybe.Just($Basics.snd(newBoard)),seed: $Basics.fst(newBoard),status: $Utils.InGame,moves: model.startingMoves});
          case "BoardSize": return _U.update(model,{boardSize: _p9._0});
-         default: return _U.update(model,{startingMoves: _p9._0});}
+         case "Moves": return _U.update(model,{startingMoves: _p9._0});
+         default: return _U.update(model,{showHint: true});}
    });
    var getColorForTile = function (t) {
       return _U.eq(t,$Utils.Yellow) ? $Styles.yellowTile : _U.eq(t,$Utils.Blue) ? $Styles.blueTile : _U.eq(t,$Utils.Red) ? $Styles.redTile : _U.eq(t,
@@ -12582,7 +12592,9 @@ Elm.Main.make = function (_elm) {
          }
    };
    var getGameView = F2(function (address,model) {
-      return A2($Html.div,_U.list([$Styles.center]),_U.list([getViewBoard(model),getButtons(address),getRemainingMoves(model),getSuggestedMoveView(model)]));
+      return A2($Html.div,
+      _U.list([$Styles.center]),
+      _U.list([getViewBoard(model),getButtons(address),getRemainingMoves(model),A2(getSuggestedMoveView,address,model)]));
    });
    var view = F2(function (address,model) {
       var _p11 = model.status;
@@ -12592,10 +12604,10 @@ Elm.Main.make = function (_elm) {
          case "Won": return A3(getFinishedView,"You win",address,model);
          default: return A3(getFinishedView,"You lose",address,model);}
    });
-   var Model = F6(function (a,b,c,d,e,f) {    return {boardSize: a,board: b,seed: c,status: d,moves: e,startingMoves: f};});
+   var Model = F7(function (a,b,c,d,e,f,g) {    return {boardSize: a,board: b,seed: c,status: d,showHint: e,moves: f,startingMoves: g};});
    var startTime = Elm.Native.Port.make(_elm).inbound("startTime","Float",function (v) {    return typeof v === "number" ? v : _U.badPort("a number",v);});
    var startTimeSeed = $Random.initialSeed($Basics.round(startTime));
-   var init = {boardSize: 6,board: $Maybe.Nothing,seed: startTimeSeed,status: $Utils.Starting,moves: 20,startingMoves: 20};
+   var init = {boardSize: 6,board: $Maybe.Nothing,seed: startTimeSeed,status: $Utils.Starting,showHint: false,moves: 20,startingMoves: 20};
    var main = $StartApp$Simple.start({model: init,view: view,update: update});
    return _elm.Main.values = {_op: _op
                              ,startTimeSeed: startTimeSeed
@@ -12618,6 +12630,7 @@ Elm.Main.make = function (_elm) {
                              ,Start: Start
                              ,BoardSize: BoardSize
                              ,Moves: Moves
+                             ,ShowHint: ShowHint
                              ,update: update
                              ,changeColor: changeColor
                              ,getBoardStatus: getBoardStatus
