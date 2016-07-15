@@ -105,18 +105,24 @@ Elm.Main.make = function (_elm) {
               ,A2($Html.br,_U.list([]),_U.list([]))]));
    });
    var getSuggestedMoveView = F2(function (address,model) {
-      if (model.showHint) {
-            var _p8 = model.board;
-            if (_p8.ctor === "Nothing") {
+      var _p8 = model.board;
+      if (_p8.ctor === "Nothing") {
+            return A2($Html.div,_U.list([]),_U.list([]));
+         } else {
+            var suggestion = $GraphUtils.getSuggestedMoveStyle(_p8._0);
+            var _p9 = suggestion;
+            if (_p9.ctor === "Nothing") {
                   return A2($Html.div,_U.list([]),_U.list([]));
                } else {
-                  return A2($Html.div,
+                  return model.showHint ? A2($Html.div,
                   _U.list([$Styles.movesContainer]),
                   _U.list([A2($Html.div,
                   _U.list([]),
-                  _U.list([$Html.text("Suggested move: "),A2($Html.div,_U.list([$Basics.fst($GraphUtils.getSuggestedMoveStyle(_p8._0))]),_U.list([]))]))]));
+                  _U.list([$Html.text("Suggested move: "),A2($Html.div,_U.list([$Basics.fst(_p9._0)]),_U.list([]))]))])) : A2($Html.div,
+                  _U.list([$Styles.showHintButton,A2($Html$Events.onClick,address,ShowHint)]),
+                  _U.list([$Html.text("View Hint")]));
                }
-         } else return A2($Html.div,_U.list([$Styles.showHintButton,A2($Html$Events.onClick,address,ShowHint)]),_U.list([$Html.text("View Hint")]));
+         }
    });
    var getRemainingMoves = function (model) {
       return A2($Html.div,_U.list([$Styles.movesContainer]),_U.list([$Html.text(A2($String.append,"Remaining moves: ",$Basics.toString(model.moves)))]));
@@ -142,13 +148,13 @@ Elm.Main.make = function (_elm) {
    });
    var getRandomBoard = F2(function (seed,x) {    return A3($Utils.randomMatrix,seed,x,x);});
    var update = F2(function (action,model) {
-      var _p9 = action;
-      switch (_p9.ctor)
-      {case "ChangeColor": return A2(changeColor,model,_p9._0);
+      var _p10 = action;
+      switch (_p10.ctor)
+      {case "ChangeColor": return A2(changeColor,model,_p10._0);
          case "Start": var newBoard = A2(getRandomBoard,model.seed,model.boardSize);
            return _U.update(model,{board: $Maybe.Just($Basics.snd(newBoard)),seed: $Basics.fst(newBoard),status: $Utils.InGame,moves: model.startingMoves});
-         case "BoardSize": return _U.update(model,{boardSize: _p9._0});
-         case "Moves": return _U.update(model,{startingMoves: _p9._0});
+         case "BoardSize": return _U.update(model,{boardSize: _p10._0});
+         case "Moves": return _U.update(model,{startingMoves: _p10._0});
          default: return _U.update(model,{showHint: true});}
    });
    var getColorForTile = function (t) {
@@ -156,8 +162,8 @@ Elm.Main.make = function (_elm) {
       $Utils.Orange) ? $Styles.orangeTile : _U.eq(t,$Utils.Purple) ? $Styles.purpleTile : $Styles.greenTile;
    };
    var getViewBoard = function (model) {
-      var _p10 = model.board;
-      if (_p10.ctor === "Nothing") {
+      var _p11 = model.board;
+      if (_p11.ctor === "Nothing") {
             return A2($Html.div,_U.list([$Styles.centerMarginTop(40)]),_U.list([$Html.text("Error")]));
          } else {
             return A2($Html.div,
@@ -173,7 +179,7 @@ Elm.Main.make = function (_elm) {
                        A3($List.foldr,
                        F2(function (y,d) {
                           return A2($Basics._op["++"],
-                          _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,_p10._0,x,y))]),_U.list([$Html.text("")]))]),
+                          _U.list([A2($Html.td,_U.list([getColorForTile(A3($Utils.getM,_p11._0,x,y))]),_U.list([$Html.text("")]))]),
                           d);
                        }),
                        _U.list([]),
@@ -190,8 +196,8 @@ Elm.Main.make = function (_elm) {
       _U.list([getViewBoard(model),getButtons(address),getRemainingMoves(model),A2(getSuggestedMoveView,address,model)]));
    });
    var view = F2(function (address,model) {
-      var _p11 = model.status;
-      switch (_p11.ctor)
+      var _p12 = model.status;
+      switch (_p12.ctor)
       {case "Starting": return A2(getStartingView,address,model);
          case "InGame": return A2(getGameView,address,model);
          case "Won": return A3(getFinishedView,"You win",address,model);

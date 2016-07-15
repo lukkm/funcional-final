@@ -51,17 +51,20 @@ createGraphRec graph board x y incomingWeight incomingColor = createGraph (creat
 getGraphSum : Graph Int String -> Int
 getGraphSum graph = List.foldr (\x c -> c + x.label) 0 (Graph.nodes graph)
 
-getSuggestedMoveStyle : Matrix -> (Attribute, Int)
-getSuggestedMoveStyle board = List.foldr (doGraphFold board) (yellowTileInline, 1000000) [(Yellow, yellowTileInline), (Blue, blueTileInline), (Red, redTileInline), (Green, greenTileInline), (Orange, orangeTileInline), (Purple, purpleTileInline)]
+getSuggestedMoveStyle : Matrix -> Maybe (Attribute, Int)
+getSuggestedMoveStyle board = List.foldr (doGraphFold board) Nothing [(Yellow, yellowTileInline), (Blue, blueTileInline), (Red, redTileInline), (Green, greenTileInline), (Orange, orangeTileInline), (Purple, purpleTileInline)]
 
-doGraphFold : Matrix -> (Tile, Attribute) -> (Attribute, Int) -> (Attribute, Int)
-doGraphFold board currentTile lastAttr = 
+doGraphFold : Matrix -> (Tile, Attribute) -> Maybe (Attribute, Int) -> Maybe (Attribute, Int)
+doGraphFold board currentTile lastAttr =
     let 
         newBoard = (updateBoard board 1 1 (getL (getL board 1) 1) (fst currentTile)) 
         newAttr = (snd currentTile)
         newValue = getGraphSum (generateGraph newBoard)
     in
-        if (newValue < snd lastAttr) then
-                (newAttr, newValue)
-            else
-                lastAttr
+        case lastAttr of
+            Nothing -> Just (newAttr, newValue)
+            Just attr -> 
+                if (newValue < snd attr) then
+                    Just (newAttr, newValue)
+                else
+                    Just attr

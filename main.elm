@@ -115,14 +115,22 @@ getRemainingMoves model =
 
 getSuggestedMoveView : Signal.Address Action -> Model -> Html
 getSuggestedMoveView address model =
-    if (model.showHint) then
-        case model.board of
+    case model.board of
         Nothing -> div [] []
-        Just board -> div [movesContainer] [
-            div [] [text "Suggested move: ", div [fst (getSuggestedMoveStyle board)] []]
-        ]
-    else
-        div [showHintButton, onClick address ShowHint] [text "View Hint"]
+        Just board ->
+            let
+                suggestion = getSuggestedMoveStyle board
+            in
+                case suggestion of
+                    Nothing -> div [] []
+                    Just s -> 
+                        if (model.showHint) then
+                            div [movesContainer] [
+                                div [] [text "Suggested move: ", div [fst s] []]
+                            ]
+                        else
+                            div [showHintButton, onClick address ShowHint] [text "View Hint"]
+    
 
 getPlayOptions : Signal.Address Action -> Model -> Html
 getPlayOptions address model= 
